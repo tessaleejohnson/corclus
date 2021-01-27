@@ -22,4 +22,4 @@ Correlated Clusters* simulation study:
 
   - Johnson, T. L., Feng, Y., Stapleton, L. M. (*Working Paper*). The
     effect of correlated clusters on parameter estimates in multiple
-    membership models
+    membership models.

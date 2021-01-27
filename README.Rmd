@@ -29,4 +29,4 @@ devtools::install_github("tessaleejohnson/corclus")
 
 This R package was developed to manage the _Multiple Membership with Correlated Clusters_ simulation study:
 
-* Johnson, T. L., Feng, Y., Stapleton, L. M. (_Working Paper_). The effect of correlated clusters on parameter estimates in multiple membership models
+* Johnson, T. L., Feng, Y., Stapleton, L. M. (_Working Paper_). The effect of correlated clusters on parameter estimates in multiple membership models.
