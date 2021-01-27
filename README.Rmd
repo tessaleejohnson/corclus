@@ -1,0 +1,32 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# corclus
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+## Installation
+
+You can install the development version from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("tessaleejohnson/corclus")
+```
+
+This R package was developed to manage the _Multiple Membership with Correlated Clusters_ simulation study:
+
+* Johnson, T. L., Feng, Y., Stapleton, L. M. (_Working Paper_). The effect of correlated clusters on parameter estimates in multiple membership models
