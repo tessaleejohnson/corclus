@@ -39,7 +39,7 @@ of predictor values \code{.sch_predictor} and constructs the weighted
 sum as \eqn{diag(.sch_weight \%*\% t(.sch_predictor))}.
 }
 \examples{
-\dontrun(
+\dontrun{
 
 sch_inf <-
   gen_u_mmrem(
@@ -56,5 +56,5 @@ sch_inf <-
     )
   )
 
-)
+}
 }

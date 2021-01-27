@@ -1,13 +1,13 @@
 Package: corclus
-Title: What the Package Does (One Line, Title Case)
+Title: Simulate Data from the Correlated Cluster Multiple Membership Model
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Tessa",
+           family = "Johnson",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+           email = "johnsont@umd.edu",
+           comment = c(ORCID = "0000-0002-6631-5852"))
+Description: This package simulates data from the correlated cluster multiple membership random effects model. Data are then estimated using the multiple membership random effects model (ignoring the correlation between clusters) to determine the impacts of ignoring between-cluster correlation on parameter estimates.
 License: `use_mit_license()`, `use_gpl3_license()` or friends to
     pick a license
 Encoding: UTF-8
@@ -21,4 +21,5 @@ Imports:
     MASS,
     tibble,
     tidyr,
-    stringr
+    stringr,
+    tidyselect

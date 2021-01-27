@@ -7,10 +7,9 @@
 pivot_longer_multicol(
   .dat,
   .cols,
-  .capture_groups = "(.+)_(.+)",
   .tag_group = 2,
-  .tag_name = "time",
-  ...
+  .capture_groups = "(.+)_(.+)",
+  .tag_name = "time"
 )
 }
 \arguments{
@@ -18,12 +17,6 @@ pivot_longer_multicol(
 
 \item{.cols}{Either a string vector listing the names of the columns to be
 pivoted or a \code{\link[tidyselect]{starts_with}} selection helper.}
-
-\item{.capture_groups}{A string containing a regular expression defining
-two capture groups, one capturing the name of the variable to be saved and
-one group capturing the commonly formatted "tag" of the variables. Defaults
-to \code{"(.+)_(.+)"}, which splits the variable names at the last "\emph{"
-character present in the variable name (the final "}" is removed).}
 
 \item{.tag_group}{Numeric scalar. Indicates the capture group (as defined
 by the regular expression in \code{.capture_groups}) that contains the
@@ -34,12 +27,16 @@ helpful if the tags are meaningful. For example, for variables
 "sch_1" and "sch_2", a new variable will be created that will take values of
 "1" and "2".}
 
+\item{.capture_groups}{A string containing a regular expression defining
+two capture groups, one capturing the name of the variable to be saved and
+one group capturing the commonly formatted "tag" of the variables. Defaults
+to \code{"(.+)_(.+)"}, which splits the variable names at the last "\emph{"
+character present in the variable name (the final "}" is removed).}
+
 \item{.tag_name}{String. Indicates the variable name that should be given to
 the new variable containing the variable tags. Because this function was
 created to manage the longitudinal school mobility process, the argument
 defaults to "time".}
-
-\item{...}{Not used at this time.}
 }
 \value{
 This function returns a dataframe with the columns in \code{.cols}

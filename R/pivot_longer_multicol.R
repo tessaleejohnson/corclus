@@ -4,7 +4,7 @@
 # stringr
 #
 # Internal Dependencies:
-#
+# extract_groups
 #---------------------------------
 
 
@@ -24,12 +24,6 @@
 #' @param .cols Either a string vector listing the names of the columns to be
 #' pivoted or a \code{\link[tidyselect]{starts_with}} selection helper.
 #'
-#' @param .capture_groups A string containing a regular expression defining
-#' two capture groups, one capturing the name of the variable to be saved and
-#' one group capturing the commonly formatted "tag" of the variables. Defaults
-#' to \code{"(.+)_(.+)"}, which splits the variable names at the last "_"
-#' character present in the variable name (the final "_" is removed).
-#'
 #' @param .tag_group Numeric scalar. Indicates the capture group (as defined
 #' by the regular expression in \code{.capture_groups}) that contains the
 #' commonly formatted "tag". Defaults to 2 (e.g., "sch_1" contains the tag in
@@ -39,12 +33,16 @@
 #' "sch_1" and "sch_2", a new variable will be created that will take values of
 #' "1" and "2".
 #'
+#' @param .capture_groups A string containing a regular expression defining
+#' two capture groups, one capturing the name of the variable to be saved and
+#' one group capturing the commonly formatted "tag" of the variables. Defaults
+#' to \code{"(.+)_(.+)"}, which splits the variable names at the last "_"
+#' character present in the variable name (the final "_" is removed).
+#'
 #' @param .tag_name String. Indicates the variable name that should be given to
 #' the new variable containing the variable tags. Because this function was
 #' created to manage the longitudinal school mobility process, the argument
 #' defaults to "time".
-#'
-#' @param ... Not used at this time.
 #'
 #' @return This function returns a dataframe with the columns in \code{.cols}
 #' pivoted to have a single column per unique value of the non-tag in
@@ -82,40 +80,46 @@ pivot_longer_multicol <-
   function(
     .dat,
     .cols,
-    .capture_groups = "(.+)_(.+)",
     .tag_group = 2,
-    .tag_name = "time",
-    ...
+    .capture_groups = "(.+)_(.+)",
+    .tag_name = "time"
   ) {
 
     ##--setup--##
+
+    # use enquo and eval_select to evaluate the .cols argument
+    .cols <-
+      tidyselect::eval_select(
+        expr = dplyr::enquo(.cols),
+        data = .dat[unique(names(.dat))]
+      )
 
     # Determine the new variable names after applying the regex with
     # .capture_groups to the first pivot_longer step
     # NOTE: we can only have two capture groups for pivot_longer -
     # one to capture the variable name and one to capture the repetition tag
-    # (e.g., "sch_id" and "1" or "2"). With two capture groups,
-    # stringr::str_match will output a matrix with three columns. The first
-    # column will contains the full variable name (since we're matching
-    # the whole thing), the second column will contain the first capture
-    # group, and the third column will contain the second capture group.
-    # The output from the second or third column will contain the new set of
-    # columns we want, depending on the regex supplied in .capture_groups
-    # and the format of the variable names (i.e., the value of .tag_group).
-    col_nm_groups <-
-      .dat %>%
-      dplyr::select(., .cols) %>%
-      names(.) %>%
-      stringr::str_match(., .capture_groups)
+    # (e.g., "sch_id" and "1" or "2").
 
-    value_nms <- unique(col_nm_groups[, .tag_group + 1])
+    value_nms <-
+      .dat %>%
+      dplyr::select(., !!.cols) %>%
+      names(.) %>%
+      extract_groups(
+        .strings = .,
+        .capture_groups = .capture_groups,
+        .tag_group = .tag_group
+      )
 
     # use .tag_group (the position of the "tag" or the repeated indicator
     # for the variable names) to set up the input for the "names_to" argument
     # in pivot_longer. with two capture groups, names_to needs to take a
-    # vector input of length 2. One of the elements should be the special
-    # ".value" sentinel, which uses the values in
-    # col_nm_groups[, .tag_group + 1] to set names for the new variables.
+    # vector input of length 2.
+
+    # One of the elements should be the special
+    # ".value" sentinel, which uses the values in extract_groups for the
+    # opposide .tag_group (i.e., if .tag_group is 1, then it uses the values of
+    # 2) to set names for the new variables.
+
     # the other element should be "names" (could be anything, but "names"
     # makes the most sense in our context). This refers to the variable names
     # that we want to save for later (e.g., "sch_id", "sch_wt", "z_predictor").

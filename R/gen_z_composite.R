@@ -27,7 +27,7 @@
 #'
 #' @export
 #'
-#' @examples \dontrun(
+#' @examples \dontrun{
 #'
 #' sch_inf <-
 #'   gen_u_mmrem(
@@ -44,7 +44,7 @@
 #'     )
 #'   )
 #'
-#' )
+#' }
 gen_z_composite <-
   function(
     .sch_weight,

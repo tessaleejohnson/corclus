@@ -204,7 +204,7 @@ assign_mobility <-
     sch_mob <- cbind(
       .sch_exp,
       sch2_mob,
-      mobilty = mob_assign,
+      mobility = mob_assign,
       wt_dat
     )
 
