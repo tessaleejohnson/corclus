@@ -6,11 +6,11 @@
 # glue
 #
 # Internal Dependencies:
-# pivot_longer_multicol
+# pivot_longer_values
 #---------------------------------
 
 
-#' expand_weights
+#' pivot_wider_multicol
 #'
 #' This function uses a combination of \code{\link{pivot_longer_multicol}},
 #' \code{\link[tidyr]{pivot_wider}}, and \code{\link[dplyr]{group_by}} with
@@ -33,6 +33,13 @@
 #' variable will be "sch_wt". Ultimately, this "tagless" name will be
 #' determined by the regex given by \code{.capture_groups} passed to
 #' \code{\link{pivot_longer_multicol}}.
+#'
+#' @param .values_fill A scalar. Indicates the value that should be filled in
+#' when values are missing. Defaults to 0.
+#'
+#' @param .collapse_fun A function. Identifies the function to be used to
+#' collapse over rows during \code{\link[dplyr]{group_by}} and
+#' \code{\link[dplyr]{summarise}}. Defaults to \code{sum}.
 #'
 #' @param ... Other parameters passed to \code{\link{pivot_longer_multicol}}.
 #'
@@ -60,7 +67,7 @@
 #'   )
 #'
 #' temp_dat %>%
-#'   expand_weights(
+#'   pivot_wider_multicol(
 #'     .dat = .,
 #'     .id_cols = "x",
 #'     .cols = tidyr::matches("_"),
@@ -70,7 +77,7 @@
 #'   )
 #'
 #' }
-expand_weights <-
+pivot_wider_multicol <-
   function(
     .dat,
     .id_cols,
@@ -79,6 +86,8 @@ expand_weights <-
     .wider_values,
     .wider_prefix = "wts_",
     .tag_name = "time",
+    .values_fill = 0,
+    .collapse_fun = sum,
     ...
   ) {
 
@@ -137,7 +146,8 @@ expand_weights <-
           @ .wider_prefix @{ @ names(.dat_long[.wider_names_long]) @ }
           ',
           .open = "@",
-          .close = "@")) %>%
+          .close = "@"),
+        values_fill = .values_fill) %>%
       dplyr::select(., -tidyselect::any_of(.tag_name))
 
 
@@ -167,7 +177,7 @@ expand_weights <-
         .data = .,
         dplyr::across(
           .cols = tidyr::matches(.wider_prefix),
-          .fns = sum,
+          .fns = .collapse_fun,
           na.rm = TRUE,
           .names = "{.col}"
         )

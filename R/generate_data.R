@@ -12,7 +12,7 @@
 # gen_z_composite
 # gen_xr_rnorm
 # gen_y_mmrem
-# expand_weights
+# pivot_wider_multicol
 #---------------------------------
 
 
@@ -111,13 +111,13 @@ generate_data <-
     ##--data manipulation:
 
     # 1. combine school and student datasets,
-    # 2. add expanded weights to the data,
+    # 2. add expanded sch_wts & sch_ids to the data,
     # 3. create a 1/0 coded is_mobile var,
     # 4. order results by sch1's id (wts_1) and stu_id
     # 5. organize variable order by type
     # 6. add a constant term
 
-    sch_stu_dat <-
+    #sch_stu_dat <-
       tibble::tibble(sch_inf, stu_inf) %>%
       dplyr::mutate(
         .data = .,
@@ -130,12 +130,25 @@ generate_data <-
       ) %>%
       dplyr::mutate(
         .data = .,
-        expand_weights(
+        pivot_wider_multicol(
           .dat = .,
           tidyr::matches("stu"),
           tidyr::matches("sch"),
           .wider_names = tidyr::matches("sch_id"),
-          .wider_values = tidyr::matches("sch_wt")
+          .wider_values = tidyr::matches("sch_wt"),
+          .wider_prefix = "wts_",
+          .values_fill = 0,
+          .collapse_fun = sum
+        ),
+        pivot_wider_multicol(
+          .dat = .,
+          tidyr::matches("stu"),
+          tidyr::matches("sch_id"),
+          .wider_names = tidyr::matches("sch_id"),
+          .wider_values = tidyr::matches("sch_id"),
+          .wider_prefix = "ids_",
+          .values_fill = 0,
+          .collapse_fun = max
         )
       ) %>%
       dplyr::arrange(., sch_id_1, sch_id_2, stu_id) %>%
@@ -152,7 +165,8 @@ generate_data <-
           "z_predictor_2"
         )),
         tidyr::matches("sch_wt"),
-        tidyr::matches("wts"),
+        tidyr::matches("wts_"),
+        tidyr::matches("ids_"),
         tidyr::matches("residual")
       )
 
