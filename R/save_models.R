@@ -8,12 +8,17 @@
 
 
 
+#' save_models
+#'
+#' @return
+#' @export
+#'
+#' @examples \dontrun{
+#'
+#'
+#' }
 save_models <-
-  function(
-
-
-
-  ) {
+  function() {
 
 
     names.coef <- c("nsim", "mod", "form", "nsch", "nstu", "pctmob", "cor", "icc", "est", "se", "stat", "p", "lwr", "upr", "ess")
