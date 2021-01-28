@@ -117,7 +117,7 @@ generate_data <-
     # 5. organize variable order by type
     # 6. add a constant term
 
-    #sch_stu_dat <-
+    sch_stu_dat <-
       tibble::tibble(sch_inf, stu_inf) %>%
       dplyr::mutate(
         .data = .,
