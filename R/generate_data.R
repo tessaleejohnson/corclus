@@ -151,7 +151,7 @@ generate_data <-
           .collapse_fun = max
         )
       ) %>%
-      dplyr::arrange(., sch_id_1, sch_id_2, stu_id) %>%
+      dplyr::arrange(., sch_id_1, stu_id) %>%
       dplyr::select(
         .data = .,
         tidyr::matches("_id"),
