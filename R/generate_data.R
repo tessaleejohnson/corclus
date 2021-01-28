@@ -155,6 +155,7 @@ generate_data <-
       dplyr::select(
         .data = .,
         tidyr::matches("_id"),
+        tidyr::matches("sch_wt"),
         tidyr::matches("mob"),
         tidyselect::all_of(c(
           "constant",
@@ -164,9 +165,8 @@ generate_data <-
           "z_predictor_1",
           "z_predictor_2"
         )),
-        tidyr::matches("sch_wt"),
-        tidyr::matches("wts_"),
         tidyr::matches("ids_"),
+        tidyr::matches("wts_"),
         tidyr::matches("residual")
       )
 
