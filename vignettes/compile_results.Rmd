@@ -1,0 +1,224 @@
+---
+title: "compile_results"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{compile_results}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+## load libraries
+
+# library(corclus)
+devtools::load_all()
+
+## set paths
+path <- system.file("extdata", package = "corclus", mustWork = TRUE)
+path_results <- here::here(file.path("../", "SimData/Results/"))
+
+## get subdirectories for path_results (the first is just path_results)
+sub_path_results <- list.dirs(path_results)[-1]
+
+```
+
+## Check Data Generation
+
+```{r, eval=FALSE}
+# use a large number of schools to demonstrate
+# variance is calculated correctly (5 students per school because
+# this many schools creates a very wide dataset)
+dat <-
+  generate_data(
+    .n_sch = 500,
+    .n_stu = 5,
+    .u_resid_var = 0.2,
+    .clust_cov = c(0.8, 0.4),
+    .wt_vec = c(0.5, 0.5),
+    .pct_mobile = 1,
+    .mean_x = 0,
+    .var_x = 0,
+    .mean_r = 0,
+    .var_r = 0,
+    .gamma_z = 1,
+    .gamma_x = c(0, 0),
+    .seed_start = 1
+  )
+
+# with equal weights and 2 schools max, level-2 variance should be
+# (1-m) * (0.5 + 0.5 * 1) + m * (0.5 + 0.5 * r), 
+# where r is the covariance among adjacent schools and m is the pct mobility.
+#
+# (we're only allowing students to go to adjacent schools - we could expand
+# that as a future factor by increasing the .max_dist argument - e.g.,
+# to be able to go to a school two schools away, set .max_dist = 2)
+
+temp <- dat %>%
+  dplyr::group_by(., sch_id_1) %>%
+  dplyr::summarise(
+    sch_avg_1 = mean(u_residual_1),
+    sch_avg_2 = mean(u_residual_2)
+  ) %>%
+  dplyr::select(., -sch_id_1) %>%
+  dplyr::mutate(., z1z2 = 0.5 * sch_avg_1 + 0.5 * sch_avg_2)
+
+var(temp)
+
+```
+
+
+## Read in Results
+
+```{r, eval=FALSE}
+
+## load simulated data
+load(file.path(path, list.files(path, pattern = ".rda")))
+
+hlm <- list(mod_list$hlm, mod_list$hlm, mod_list$hlm)
+mm <- list(mod_list$mm, mod_list$mm, mod_list$mm)
+
+```
+
+## Produce Results Table
+
+```{r, eval=FALSE}
+
+# set condition number
+cond_num = 1
+
+mod_results <-
+  mm %>%
+  purrr::imap(., ~{
+    
+    # get number of chains
+    n_chains <- .x[["nchains"]]
+    
+    # extract the parameter estimates
+    par_est <- 
+      extract_estimates(.x, n_chains)
+    
+    # extract the global fit estimates (keep only DIC)
+    sum_stat <- 
+      extract_sumstat(hlm[[1]]) %>%
+      dplyr::filter(., stringr::str_detect(Parameter, "DIC|pD"))
+    
+    # merge the parameter estimates with global fit &
+    # add a column identifiying the simulation number
+    par_est %>%
+      dplyr::bind_rows(., sum_stat) %>%
+      dplyr::mutate(sim_num = .y, .before = 1)
+    
+    
+  }) %>%
+  purrr::reduce(., dplyr::bind_rows) %>%
+  dplyr::mutate(., cond_num = cond_num, .before = 1) %>%
+  dplyr::group_by(., cond_num, Parameter) %>%
+  dplyr::summarise(
+    .data = ., 
+    dplyr::across(Estimate:ESS, mean)
+  )
+
+```
+
+## Compile Saved Data
+
+```{r, eval=FALSE}
+
+temp_dat_list <-
+  sub_path_results[1:3] %>%
+  purrr::map(., ~{
+    
+    # get the list of files from each sub directory
+    .paths <- file.path(.x, list.files(.x, pattern = ".txt"))
+    
+    # enter a new purrr::map to read those data
+    .paths %>%
+      purrr::map(., ~{
+        
+        # explicitly state col_types to avoid printing the message 81*5 times
+        if (stringr::str_detect(.x, "results_sumstat")) {
+          .col_types <-
+            readr::cols(
+              nsim = readr::col_double(),
+              mod = readr::col_double(),
+              form = readr::col_double(),
+              nsch = readr::col_double(),
+              nstu = readr::col_double(),
+              pctmob = readr::col_double(),
+              cor = readr::col_double(),
+              icc = readr::col_double(),
+              Dbar = readr::col_double(),
+              Dthetabar = readr::col_double(),
+              pD = readr::col_double(),
+              DIC = readr::col_double(),
+              N = readr::col_double()
+            )
+        } else {
+          .col_types <-
+            readr::cols(
+              nsim = readr::col_double(),
+              mod = readr::col_double(),
+              form = readr::col_double(),
+              nsch = readr::col_double(),
+              nstu = readr::col_double(),
+              pctmob = readr::col_double(),
+              cor = readr::col_double(),
+              icc = readr::col_double(),
+              est = readr::col_double(),
+              se = readr::col_double(),
+              stat = readr::col_double(),
+              p = readr::col_double(),
+              lwr = readr::col_double(),
+              upr = readr::col_double(),
+              ess = readr::col_double()
+            )
+        }
+        
+        # read the space-delimited data files and add a column indicating the
+        # parameter name (based on the file name)
+        .x %>%
+          readr::read_delim(
+            file = .,
+            delim = " ",
+            col_types = .col_types
+          ) %>%
+          dplyr::mutate(
+            .data = .,
+            Parameter = .x %>%
+              stringr::str_replace(., ".*/", "") %>%
+              stringr::str_replace_all(., "results_coef_|.txt", ""),
+            .after = "icc" 
+          )
+        
+      })
+    
+  })
+
+
+temp_dat_reduce <-
+  temp_dat_list %>%
+  purrr::map(., ~{
+    .x[1:4]
+  }) %>%
+  purrr::reduce(., dplyr::bind_rows) %>%
+  dplyr::select(., -tidyselect::any_of(c("stat", "p", "lwr", "upr"))) %>%
+  dplyr::arrange(., nsim, form, icc, mod)
+
+```
+
+## Analyze Compiled Data
+
+```{r, eval=FALSE}
+
+temp_dat_reduce %>%
+  dplyr::filter(., !is.na(est), Parameter == "fp_int")
+
+```
+

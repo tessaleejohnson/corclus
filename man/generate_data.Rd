@@ -7,9 +7,16 @@
 generate_data(
   .n_sch = 5,
   .n_stu = 5,
-  .clust_cov = c(0.8, 0.2),
+  .u_resid_var = 0.2,
+  .clust_cov = c(0.8, 0),
+  .wt_vec = c(0.5, 0.5),
   .pct_mobile = 0.2,
-  .gamma = c(10, 1.5),
+  .mean_x = 5,
+  .var_x = 4,
+  .mean_r = 0,
+  .var_r = 2,
+  .gamma_z = 0,
+  .gamma_x = c(10, 1.5),
   .seed_start = 1,
   ...
 )
@@ -34,7 +41,7 @@ default to 0. The main diagonal (i.e., predictor variance) defaults to 0.8.}
 mobile students to be saved in the "center" option of
 \code{.mob_option}.}
 
-\item{.gamma}{Numeric vector with length p (where p is the number of model
+\item{.gamma_x}{Numeric vector with length p (where p is the number of model
 coefficients, including the intercept).}
 
 \item{.seed_start}{Numeric scalar. The starting seed value. Each function

@@ -4,21 +4,29 @@
 \alias{gen_u_mmrem}
 \title{gen_u_mmrem}
 \usage{
-gen_u_mmrem(.n_sch, .resid_var = 0.2, .seedling = NULL, ...)
+gen_u_mmrem(.n_sch, .u_resid_var, .clust_cov, .gamma_z, .seedling = NULL)
 }
 \arguments{
 \item{.n_sch}{Numeric scalar. Gives the total number of schools in the
 dataset. The variance-covariance matrix for predictor z will have dimensions
 \code{.n_sch x .n_sch}.}
 
-\item{.resid_var}{A numeric scalar. Gives the residual variance of u0j (i.e.,
+\item{.u_resid_var}{Numeric scalar. Gives the residual variance of u0j (i.e.,
 the variance unexplained after controlling for the school-level predictor,
 z). Defaults to 0.2.}
 
+\item{.clust_cov}{Numeric vector. The first element of the vector gives the
+variance of all schools' predictors, z. If present, the second element gives
+the covariance of z between schools k and k + 1. The values given in
+\code{.clust_cov} apply to all schools (that is, similar to a Toeplitz
+pattern). Any off-diagonal values (i.e., covariances) not specified will
+default to 0. The main diagonal (i.e., predictor variance) defaults to 0.8.}
+
+\item{.gamma_z}{Numeric scalar. The school-level effect of the
+\code{z_predictors} on the random intercept.}
+
 \item{.seedling}{A numeric scalar. Gives the seed for random number
 generation. Defaults to NULL.}
-
-\item{...}{Other parameters passed to \code{\link{gen_z_varcov}}.}
 }
 \value{
 This function returns a dataframe with four elements: "sch_id",
@@ -43,11 +51,11 @@ total variance of the random intercept should be
 \code{clust_cov[1] + .resid_var}.
 }
 \details{
-NOTE: this function relies on the \code{\link[MASS]{mvrnorm}} and
+NOTE: this function relies on the \code{\link[mvnfast]{rmvn}} and
 \code{\link{gen_z_varcov}}, and \code{\link{is_off_diag}} functions, the
-first two of which (especially \code{mvrnorm}) get quite clunky when matrix
+first two of which (especially \code{rmvn}) get quite clunky when matrix
 sizes are large. Make sure that \code{.n_sch} is given a reasonable value to
-avoid this. In testing, it seems that 1000 works slowly, 2000 is very slow,
+avoid this. In testing, it seems that 5000 works slowly, 10000 is very slow,
 and any more than that brings things to a complete halt.
 }
 \examples{
@@ -66,8 +74,8 @@ z <- c(0.8, 0.3, 0.1) # variance (0.8); covar school k/k+1 (0.3); k/k+2 (0.1)
 # output school-level information
 gen_u_mmrem(
   .n_sch = j,
-  .resid_var = v,
-  clust_cov = z
+  .u_resid_var = v,
+  .clust_cov = z
 )
 
 }

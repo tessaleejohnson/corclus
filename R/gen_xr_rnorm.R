@@ -41,11 +41,11 @@ gen_xr_rnorm <-
   function(
     .n_stu,
     .n_sch,
-    .seedling = NULL,
-    .mean_x = 5,
-    .var_x = 4,
-    .mean_r = 0,
-    .var_r = 2
+    .mean_x,
+    .var_x,
+    .mean_r,
+    .var_r,
+    .seedling = NULL
   ) {
 
     ##--setup--##

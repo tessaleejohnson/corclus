@@ -30,13 +30,6 @@
 #' by the \code{\link{gen_u_mmrem}} function and expanded by the
 #' \code{\link{expand_sch_info}} function.
 #'
-#' @param .wt_nonmob Logical. Indicates whether non-mobile students should
-#' receive the same weights as mobile students. Technically, it shouldn't
-#' matter if non-mobile students are given the same weights because their
-#' first and second schools are the same, so all weighting schemes should
-#' be equivalent, but it may matter for passing data to MLwiN for estimation.
-#' See \code{\link[R2MLwiN]{runMLwiN}} for more information.
-#'
 #' @param .wt_vec A numeric vector with length equal to the maximum number
 #' of schools attended by students in the data (in this simulation, the
 #' maximum number is 2). The values in \code{.wt_vec} are used to weight
@@ -44,6 +37,14 @@
 #' all mobile students must have the same weights. If different weighting
 #' patterns are desired, the code will need to be updated. Defaults to
 #' \code{.wt_vec = rep(0.5, 2)}.
+#'
+#' @param .wt_nonmob Logical. Indicates whether non-mobile students should
+#' receive the same weights as mobile students. Technically, it shouldn't
+#' matter if non-mobile students are given the same weights because their
+#' first and second schools are the same, so all weighting schemes should
+#' be equivalent, but it may matter for passing data to MLwiN for estimation.
+#' See \code{\link[R2MLwiN]{runMLwiN}} for more information.
+#'
 #' @param ... Other parameters passed to \code{\link{simulate_mobility}}.
 #'
 #' @inheritParams gen_z_varcov
@@ -66,15 +67,15 @@
 #'     clust_cov = c(0.8, 0.2, 0.1)
 #'   ) %>%
 #'   expand_sch(., .n_sch = 50, n_stu = 50) %>%
-#'   assign_mobility
+#'   assign_mobility(., .n_sch = 50, .wt_vec = c(0.5, 0.5))
 #'
 #' }
 assign_mobility <-
   function(
     .sch_exp,
     .n_sch,
+    .wt_vec,
     .wt_nonmob = FALSE,
-    .wt_vec = rep(0.5, 2),
     ...
   ) {
 

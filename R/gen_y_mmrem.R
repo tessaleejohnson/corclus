@@ -11,17 +11,19 @@
 #' This function calculates the observed y value from a multiple
 #' membership random effects model based on the value of a predictor, x
 #' (given in \code{.design_x}), population values of the model coefficients
-#' (given in \code{.gamma}), school residuals for the schools assigned to
+#' (given in \code{.gamma_x}), school residuals for the schools assigned to
 #' person i (given in \code{.sch_resid}), weights for those school residuals
 #' (given in \code{.sch_weight}), and person residuals. This population
 #' model has fixed slopes and random intercepts. School-level covariates
 #' are not included in this model but are used to construct the school residuals
 #' in \code{\link{gen_u_mmrem}}.
 #'
-#' @param .gamma Numeric vector with length p (where p is the number of model
+#' NOTE: function has been changed and documentation requires an update
+#'
+#' @param .gamma_x Numeric vector with length p (where p is the number of model
 #' coefficients, including the intercept).
 #'
-#' @param .design_x Numeric matrix with dimensions n x p (where n is the number
+#' @param .x_predictor Numeric matrix with dimensions n x p (where n is the num
 #' of persons and p is the number of coefficients, including the intercept).
 #' The column of \code{.design_x} corresponding to the intercept should be a
 #' column of 1s.
@@ -50,6 +52,8 @@
 #'
 #' @param .per_resid Numeric vector with length n (where n is the number of
 #' persons in the data). Gives the person-level residual for the model.
+#'
+#' @inheritParams pivot_longer_multicol
 #'
 #' @return This function returns a vector of length n (where n is the number
 #' of persons in the dataset) of y values calculated based on the population
@@ -91,8 +95,8 @@
 #'
 #' ## generate y values from the population model
 #' gen_y_mmrem(
-#'   .gamma = g,
-#'   .design_x = d_x,
+#'   .gamma_x = g,
+#'   .x_predictor = d_x,
 #'   .sch_weight = s_wt,
 #'   .sch_resid = s_r,
 #'   .per_resid = p_r
@@ -101,19 +105,74 @@
 #' }
 gen_y_mmrem <-
   function(
-    .gamma,
-    .design_x,
+    .dat,
+    .x_predictor,
     .sch_weight,
     .sch_resid,
-    .per_resid
+    .per_resid,
+    .gamma_x
   ) {
 
-    # calculate y from the population MMREM model
+    ##--tidyeval--##
 
-    as.vector(
-      .design_x %*% .gamma +
-        diag(.sch_weight %*% t(.sch_resid)) +
-        .per_resid
+    # tidyeval everything so we can use selector functions or pass
+    # the variable names as strings
+
+    .x_pred <- tidyselect::eval_select(
+      expr = dplyr::enquo(.x_predictor),
+      data = .dat[unique(names(.dat))]
     )
+
+    .sch_wt <- tidyselect::eval_select(
+      expr = dplyr::enquo(.sch_weight),
+      data = .dat[unique(names(.dat))]
+    )
+
+    .sch_res <- tidyselect::eval_select(
+      expr = dplyr::enquo(.sch_resid),
+      data = .dat[unique(names(.dat))]
+    )
+
+    .per_res <- tidyselect::eval_select(
+      expr = dplyr::enquo(.per_resid),
+      data = .dat[unique(names(.dat))]
+    )
+
+    ##--convert objects to matrices--##
+
+    .x_pred_mat <- .dat %>%
+      dplyr::select(., !!.x_pred) %>%
+      as.matrix(.)
+
+    .sch_wt_mat <- .dat %>%
+      dplyr::select(., !!.sch_wt) %>%
+      as.matrix(.)
+
+    .sch_res_mat <- .dat %>%
+      dplyr::select(., !!.sch_res) %>%
+      as.matrix(.)
+
+    .per_res_vec <- .dat %>%
+      dplyr::select(., !!.per_res) %>%
+      as.vector(.)
+
+    ##--pre-combine some elements
+
+    .design_mat <- cbind(1, .x_pred_mat)
+
+    # weight the residuals using element-wise multiplication and
+    # sum across each row
+    .sch_wres_vec <- rowSums(.sch_wt_mat * .sch_res_mat)
+
+    ##--calculate y--##
+
+    # calculate y
+    y <- .design_mat %*% .gamma_x +
+        .sch_wres_vec +
+        .per_res_vec
+
+    ##--output--##
+
+    y[[1]]
 
   }

@@ -1,6 +1,6 @@
 #---------------------------------
 # External Dependencies:
-# MASS
+# mvnfast
 #
 # Internal Dependencies:
 # gen_z_varcov
@@ -21,18 +21,19 @@
 #' total variance of the random intercept should be
 #' \code{clust_cov[1] + .resid_var}.
 #'
-#' NOTE: this function relies on the \code{\link[MASS]{mvrnorm}} and
+#' NOTE: this function relies on the \code{\link[mvnfast]{rmvn}} and
 #' \code{\link{gen_z_varcov}}, and \code{\link{is_off_diag}} functions, the
-#' first two of which (especially \code{mvrnorm}) get quite clunky when matrix
+#' first two of which (especially \code{rmvn}) get quite clunky when matrix
 #' sizes are large. Make sure that \code{.n_sch} is given a reasonable value to
-#' avoid this. In testing, it seems that 1000 works slowly, 2000 is very slow,
+#' avoid this. In testing, it seems that 5000 works slowly, 10000 is very slow,
 #' and any more than that brings things to a complete halt.
 #'
-#' @param .resid_var A numeric scalar. Gives the residual variance of u0j (i.e.,
+#' @param .u_resid_var Numeric scalar. Gives the residual variance of u0j (i.e.,
 #' the variance unexplained after controlling for the school-level predictor,
 #' z). Defaults to 0.2.
 #'
-#' @param ... Other parameters passed to \code{\link{gen_z_varcov}}.
+#' @param .gamma_z Numeric scalar. The school-level effect of the
+#' \code{z_predictors} on the random intercept.
 #'
 #' @inheritParams gen_z_varcov
 #' @inheritParams simulate_mobility
@@ -62,17 +63,18 @@
 #' # output school-level information
 #' gen_u_mmrem(
 #'   .n_sch = j,
-#'   .resid_var = v,
-#'   clust_cov = z
+#'   .u_resid_var = v,
+#'   .clust_cov = z
 #' )
 #'
 #' }
 gen_u_mmrem <-
   function(
     .n_sch,
-    .resid_var = 0.2,
-    .seedling = NULL,
-    ...
+    .u_resid_var,
+    .clust_cov,
+    .gamma_z,
+    .seedling = NULL
   ) {
 
     ##--setup--##
@@ -88,11 +90,12 @@ gen_u_mmrem <-
 
     # generate multivariate normal values for the school-level predictor_z
     predictor_z <-
-      MASS::mvrnorm(
+      mvnfast::rmvn(
         n = 1,
         mu = rep(0, .n_sch),
-        Sigma = gen_z_varcov(.n_sch, ...)
-      )
+        sigma = gen_z_varcov(.n_sch = .n_sch, .clust_cov = .clust_cov)
+      ) %>%
+      t(.)
 
     # construct a residual (v_residual) for the school-level random intercept
     # residual, u0j, with variance equal to .resid_var. .resid_var is the
@@ -104,12 +107,12 @@ gen_u_mmrem <-
     v_residual <- rnorm(
       n = .n_sch,
       mean = 0,
-      sd = sqrt(.resid_var)
+      sd = sqrt(.u_resid_var)
     )
 
     # finally, construct the school-level random intercept residual, u:
     # u0j = predictor_z + u_residual
-    u0j <- predictor_z + v_residual
+    u0j <- .gamma_z * predictor_z + v_residual
 
 
     ##--output--##

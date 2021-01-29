@@ -178,7 +178,6 @@ pivot_wider_multicol <-
         dplyr::across(
           .cols = tidyr::matches(.wider_prefix),
           .fns = .collapse_fun,
-          na.rm = TRUE,
           .names = "{.col}"
         )
       )

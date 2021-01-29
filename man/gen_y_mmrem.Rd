@@ -4,13 +4,12 @@
 \alias{gen_y_mmrem}
 \title{gen_y_mmrem}
 \usage{
-gen_y_mmrem(.gamma, .design_x, .sch_weight, .sch_resid, .per_resid)
+gen_y_mmrem(.dat, .x_predictor, .sch_weight, .sch_resid, .per_resid, .gamma_x)
 }
 \arguments{
-\item{.gamma}{Numeric vector with length p (where p is the number of model
-coefficients, including the intercept).}
+\item{.dat}{A dataframe containing the data to be pivoted.}
 
-\item{.design_x}{Numeric matrix with dimensions n x p (where n is the number
+\item{.x_predictor}{Numeric matrix with dimensions n x p (where n is the num
 of persons and p is the number of coefficients, including the intercept).
 The column of \code{.design_x} corresponding to the intercept should be a
 column of 1s.}
@@ -39,6 +38,9 @@ only a certain proportion of those mobility profiles were retained.}
 
 \item{.per_resid}{Numeric vector with length n (where n is the number of
 persons in the data). Gives the person-level residual for the model.}
+
+\item{.gamma_x}{Numeric vector with length p (where p is the number of model
+coefficients, including the intercept).}
 }
 \value{
 This function returns a vector of length n (where n is the number
@@ -52,12 +54,15 @@ desired, must be incorporated into the \code{.sch_resid} values.
 This function calculates the observed y value from a multiple
 membership random effects model based on the value of a predictor, x
 (given in \code{.design_x}), population values of the model coefficients
-(given in \code{.gamma}), school residuals for the schools assigned to
+(given in \code{.gamma_x}), school residuals for the schools assigned to
 person i (given in \code{.sch_resid}), weights for those school residuals
 (given in \code{.sch_weight}), and person residuals. This population
 model has fixed slopes and random intercepts. School-level covariates
 are not included in this model but are used to construct the school residuals
 in \code{\link{gen_u_mmrem}}.
+}
+\details{
+NOTE: function has been changed and documentation requires an update
 }
 \examples{
 \dontrun{
@@ -91,8 +96,8 @@ p_r <- rnorm(5)
 
 ## generate y values from the population model
 gen_y_mmrem(
-  .gamma = g,
-  .design_x = d_x,
+  .gamma_x = g,
+  .x_predictor = d_x,
   .sch_weight = s_wt,
   .sch_resid = s_r,
   .per_resid = p_r

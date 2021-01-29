@@ -7,11 +7,11 @@
 gen_xr_rnorm(
   .n_stu,
   .n_sch,
-  .seedling = NULL,
-  .mean_x = 5,
-  .var_x = 4,
-  .mean_r = 0,
-  .var_r = 2
+  .mean_x,
+  .var_x,
+  .mean_r,
+  .var_r,
+  .seedling = NULL
 )
 }
 \arguments{
@@ -23,9 +23,6 @@ merely the number of students per school.}
 dataset. The variance-covariance matrix for predictor z will have dimensions
 \code{.n_sch x .n_sch}.}
 
-\item{.seedling}{A numeric scalar. Gives the seed for random number
-generation. Defaults to NULL.}
-
 \item{.mean_x}{Numeric scalar. The mean of the predictor, x. Defaults to 5.}
 
 \item{.var_x}{Numeric scalar. The variance of the predictor, x. Defaults to
@@ -36,6 +33,9 @@ Defaults to 0.}
 
 \item{.var_r}{Numeric scalar. The variance of the person-level residual, r.
 Defaults to 2.}
+
+\item{.seedling}{A numeric scalar. Gives the seed for random number
+generation. Defaults to NULL.}
 }
 \value{
 This function returns a dataframe with two columns,

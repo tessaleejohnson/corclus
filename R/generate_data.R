@@ -48,88 +48,83 @@ generate_data <-
   function(
     .n_sch = 5,
     .n_stu = 5,
-    .clust_cov = c(.8, .2),
+    .u_resid_var = 0.2,
+    .clust_cov = c(.8, 0),
+    .wt_vec = c(0.5, 0.5),
     .pct_mobile = 0.2,
-    .gamma = c(10, 1.5),
+    .mean_x = 5,
+    .var_x = 4,
+    .mean_r = 0,
+    .var_r = 2,
+    .gamma_z = 0,
+    .gamma_x = c(10, 1.5),
     .seed_start = 1,
     ...
   ) {
-
 
     ##--generate school information:
 
     sch_inf <-
       gen_u_mmrem(
         .n_sch = .n_sch,
+        .u_resid_var = .u_resid_var,
         .clust_cov = .clust_cov,
+        .gamma_z = .gamma_z,
         .seedling = .seed_start + 1
       ) %>%
       expand_sch(., .n_sch = .n_sch, .n_stu = .n_stu) %>%
       assign_mobility(
         .sch_exp = .,
         .n_sch = .n_sch,
+        .wt_vec = .wt_vec,
+        .wt_nonmob = FALSE,
         .pct_mobile = .pct_mobile,
         .seedling = .seed_start + 2,
         ...
-      ) %>%
-      dplyr::mutate(
-        .data = .,
-        z_composite = gen_z_composite(
-          dplyr::select(., sch_wt_1, sch_wt_2),
-          dplyr::select(., z_predictor_1, z_predictor_2)
-        )
       )
 
-    ##--generate student information:
+    ##--pivot school info wider
 
-    # create student ID as a sequence from 1 to the number of students per
-    # school multiplied by the total number of schools (essentially just the
-    # row numbers)
-    stu_id <- seq_len(.n_sch * .n_stu)
-
-    # randomly simulate one person-level predictor and residual
-    xr <- gen_xr_rnorm(
-      .n_stu = .n_stu,
-      .n_sch = .n_sch,
-      .seedling = .seed_start + 3
-    )
-
-    # generate y based on the population mmrem model (random intercept,
-    # fixed slope)
-    y <- gen_y_mmrem(
-      .gamma =  .gamma,
-      .sch_weight = cbind(sch_inf$sch_wt_1, sch_inf$sch_wt_2),
-      .sch_resid = cbind(sch_inf$u_residual_1, sch_inf$u_residual_2),
-      .per_resid = xr$r_residual,
-      .design_x = cbind(1, xr$x_predictor)
-    )
-
-    # combine person-level data
-    stu_inf <- cbind(stu_id, xr, y)
+    # 1. add a student identifier, stu_id
+    # 2. create a 1/0 coded is_mobile var
+    # 3. add expanded sch_wts (wts), sch_ids (ids), & sch_res (ures)
 
 
-    ##--data manipulation:
+    # helper functions for pivoting wide & then summarizing in the
+    # pivot_wider_multicol steps
+    combine_vals <-
+      function(...) {
+        sum(..., na.rm = TRUE)
+      }
 
-    # 1. combine school and student datasets,
-    # 2. add expanded sch_wts & sch_ids to the data,
-    # 3. create a 1/0 coded is_mobile var,
-    # 4. order results by sch1's id (wts_1) and stu_id
-    # 5. organize variable order by type
-    # 6. add a constant term
+    collapse_vals <-
+      function(...) {
+        x_unique <- unique(...)
+        x_narm <- x_unique[x_unique != 0]
 
-    sch_stu_dat <-
-      tibble::tibble(sch_inf, stu_inf) %>%
+        if (length(x_narm) == 0) {
+          combine_vals(x_narm)
+        } else {
+          x_narm
+        }
+      }
+
+    # expand the school information
+    sch_wider <-
+      sch_inf %>%
+      tibble::tibble(.) %>%
+      tibble::rowid_to_column(., var = "stu_id") %>%
       dplyr::mutate(
         .data = .,
         is_mobile = dplyr::case_when(
           mobility == 0 ~ 0,
           is.na(mobility) ~ NA_real_,
           TRUE ~ 1
-        ),
-        constant = 1
+        )
       ) %>%
       dplyr::mutate(
         .data = .,
+        # expand weights, one column per id
         pivot_wider_multicol(
           .dat = .,
           tidyr::matches("stu"),
@@ -138,8 +133,9 @@ generate_data <-
           .wider_values = tidyr::matches("sch_wt"),
           .wider_prefix = "wts_",
           .values_fill = 0,
-          .collapse_fun = sum
+          .collapse_fun = ~sum(.x, na.rm = TRUE)
         ),
+        # expand ids, one column per id
         pivot_wider_multicol(
           .dat = .,
           tidyr::matches("stu"),
@@ -148,9 +144,66 @@ generate_data <-
           .wider_values = tidyr::matches("sch_id"),
           .wider_prefix = "ids_",
           .values_fill = 0,
-          .collapse_fun = max
+          .collapse_fun = collapse_vals
+        )
+      )
+
+
+    ##--generate student information:
+
+    # 1. add student level predictor (x) and residual (y)
+    # 2. add student level outcome (y)
+    # 3. add school level composite predictor (z_composite)
+
+    sch_stu_dat <-
+      sch_wider %>%
+
+      # randomly simulate one person-level predictor and residual
+      dplyr::mutate(
+        .data = .,
+        gen_xr_rnorm(
+          .n_stu = .n_stu,
+          .n_sch = .n_sch,
+          .seedling = .seed_start + 3,
+          .mean_x = .mean_x,
+          .var_x = .var_x,
+          .mean_r = .mean_r,
+          .var_r = .var_r
         )
       ) %>%
+
+      # generate y based on the population mmrem model (random intercept,
+      # fixed slope)
+      dplyr::mutate(
+        y = gen_y_mmrem(
+          .dat = .,
+          .gamma_x =  .gamma_x,
+          .sch_weight = tidyr::matches("sch_wt"),
+          .sch_resid = tidyr::matches("u_res"),
+          .per_resid = "r_residual",
+          .x_predictor = "x_predictor"
+        )
+      ) %>%
+
+      # add composite z predictor by weighting the original zs and
+      # computing the rowSums
+      dplyr::mutate(
+        z_composite = gen_z_composite(
+          .dat = .,
+          .sch_weight = tidyr::matches("sch_wt"),
+          .sch_predictor = tidyr::matches("z_pred")
+        )
+      )
+
+
+    ##--data manipulation:
+
+    # 1. order data by sch1's id (sch_id_1) and stu_id
+    # 3. organize variable order by type
+    # 4. add a constant term
+
+    dat_sorted <-
+      sch_stu_dat %>%
       dplyr::arrange(., sch_id_1, stu_id) %>%
       dplyr::select(
         .data = .,
@@ -158,22 +211,20 @@ generate_data <-
         tidyr::matches("sch_wt"),
         tidyr::matches("mob"),
         tidyselect::all_of(c(
-          "constant",
           "y",
           "x_predictor",
           "z_composite",
           "z_predictor_1",
           "z_predictor_2"
         )),
+        tidyr::matches("residual"),
         tidyr::matches("ids_"),
-        tidyr::matches("wts_"),
-        tidyr::matches("residual")
+        tidyr::matches("wts_")
       )
 
     ##--output data--##
-    sch_stu_dat
+    dat_sorted
 
 
   }
-
 

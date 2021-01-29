@@ -22,4 +22,16 @@ Imports:
     tibble,
     tidyr,
     stringr,
-    tidyselect
+    tidyselect,
+    purrr,
+    rlang,
+    coda,
+    R2MLwiN,
+    readr,
+    here,
+    mvnfast,
+    matrixcalc
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

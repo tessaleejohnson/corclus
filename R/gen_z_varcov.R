@@ -1,6 +1,7 @@
 #---------------------------------
 # External Dependencies:
 # glue
+# matrixcalc
 #
 # Internal Dependencies:
 # is_off_diag
@@ -53,7 +54,7 @@
 gen_z_varcov <-
   function(
     .n_sch,
-    .clust_cov = 0.8
+    .clust_cov
   ) {
 
     ##--setup--##
@@ -93,6 +94,11 @@ gen_z_varcov <-
       for(j in 1:i) {
         z_sigma[j, i] <- z_sigma[i, j]
       }
+    }
+
+    # test if matrix is positive definite
+    if (!matrixcalc::is.positive.definite(z_sigma)) {
+      stop("z_sigma is not positive definite. Check the values of .clust_cov.")
     }
 
     ##--output--##

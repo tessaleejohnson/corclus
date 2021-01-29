@@ -47,34 +47,42 @@
 #' }
 gen_z_composite <-
   function(
+    .dat,
     .sch_weight,
     .sch_predictor
   ) {
 
-    ##--setup--##
+    ##--tidyeval--##
 
-    # check to make sure .sch_predictor and .sch_weight have the same
-    # dimensions
-    if (!all(dim(.sch_weight) == dim(.sch_predictor))) {
-      stop(".sch_weight and .sch_predictor must have the same dimensions.")
-    }
+    .sch_wt <- tidyselect::eval_select(
+      expr = dplyr::enquo(.sch_weight),
+      data = .dat[unique(names(.dat))]
+    )
 
-    # convert .sch_weight and .sch_predictor to matrices
-    wt_mat <- as.matrix(.sch_weight)
-    z_mat <- as.matrix(.sch_predictor)
+    .sch_z <- tidyselect::eval_select(
+      expr = dplyr::enquo(.sch_predictor),
+      data = .dat[unique(names(.dat))]
+    )
+
+    ##--convert objects to matrices--##
+
+    .sch_wt_mat <- .dat %>%
+      dplyr::select(., !!.sch_wt) %>%
+      as.matrix(.)
+
+    .sch_z_mat <- .dat %>%
+      dplyr::select(., !!.sch_z) %>%
+      as.matrix(.)
 
 
     ##--construct composite with matrix algebra--##
 
-    # matrix multiplying the weights with the transpose of the zs and then
-    # taking the diagonal of the result is equivalent (and faster than)
-    # multiplying wt_mat[1] * z_mat[1] + wt_mat[2] * z_mat[2]
-    z_comp <-
-      diag(wt_mat %*% t(z_mat)) %>%
-      unname(.)
+    # weight the residuals using element-wise multiplication and
+    # sum across each row
+    .sch_wz_vec <- rowSums(.sch_wt_mat * .sch_z_mat)
 
 
     ##--output--##
-    z_comp
+    .sch_wz_vec
 
   }

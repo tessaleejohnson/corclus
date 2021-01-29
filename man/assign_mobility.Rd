@@ -4,13 +4,7 @@
 \alias{assign_mobility}
 \title{assign_mobility}
 \usage{
-assign_mobility(
-  .sch_exp,
-  .n_sch,
-  .wt_nonmob = FALSE,
-  .wt_vec = rep(0.5, 2),
-  ...
-)
+assign_mobility(.sch_exp, .n_sch, .wt_vec, .wt_nonmob = FALSE, ...)
 }
 \arguments{
 \item{.sch_exp}{A matrix or dataframe. The school-level information created
@@ -21,13 +15,6 @@ by the \code{\link{gen_u_mmrem}} function and expanded by the
 dataset. The variance-covariance matrix for predictor z will have dimensions
 \code{.n_sch x .n_sch}.}
 
-\item{.wt_nonmob}{Logical. Indicates whether non-mobile students should
-receive the same weights as mobile students. Technically, it shouldn't
-matter if non-mobile students are given the same weights because their
-first and second schools are the same, so all weighting schemes should
-be equivalent, but it may matter for passing data to MLwiN for estimation.
-See \code{\link[R2MLwiN]{runMLwiN}} for more information.}
-
 \item{.wt_vec}{A numeric vector with length equal to the maximum number
 of schools attended by students in the data (in this simulation, the
 maximum number is 2). The values in \code{.wt_vec} are used to weight
@@ -35,6 +22,13 @@ the effects of different schools attended on students. For this study,
 all mobile students must have the same weights. If different weighting
 patterns are desired, the code will need to be updated. Defaults to
 \code{.wt_vec = rep(0.5, 2)}.}
+
+\item{.wt_nonmob}{Logical. Indicates whether non-mobile students should
+receive the same weights as mobile students. Technically, it shouldn't
+matter if non-mobile students are given the same weights because their
+first and second schools are the same, so all weighting schemes should
+be equivalent, but it may matter for passing data to MLwiN for estimation.
+See \code{\link[R2MLwiN]{runMLwiN}} for more information.}
 
 \item{...}{Other parameters passed to \code{\link{simulate_mobility}}.}
 }
@@ -74,7 +68,7 @@ sch_inf <-
     clust_cov = c(0.8, 0.2, 0.1)
   ) \%>\%
   expand_sch(., .n_sch = 50, n_stu = 50) \%>\%
-  assign_mobility
+  assign_mobility(., .n_sch = 50, .wt_vec = c(0.5, 0.5))
 
 }
 }

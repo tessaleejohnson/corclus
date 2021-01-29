@@ -4,7 +4,7 @@
 \alias{gen_z_varcov}
 \title{gen_z_varcov}
 \usage{
-gen_z_varcov(.n_sch, .clust_cov = 0.8)
+gen_z_varcov(.n_sch, .clust_cov)
 }
 \arguments{
 \item{.n_sch}{Numeric scalar. Gives the total number of schools in the
