@@ -8,15 +8,15 @@ generate_data(
   .n_sch = 5,
   .n_stu = 5,
   .u_resid_var = 0.2,
-  .clust_cov = c(0.8, 0),
+  .clust_cov = c(0.8, 1),
   .wt_vec = c(0.5, 0.5),
-  .pct_mobile = 0.2,
+  .pct_mobile = 0,
   .mean_x = 5,
   .var_x = 4,
   .mean_r = 0,
   .var_r = 2,
   .gamma_z = 0,
-  .gamma_x = c(10, 1.5),
+  .gamma_x = c(10, sqrt(17)/2),
   .seed_start = 1,
   ...
 )
@@ -63,7 +63,33 @@ This function
 \examples{
 \dontrun{
 
-generate_data()
+# with the following defaults, we adjust x1beta to get the
+# desired icc:
+
+## icc = 0.05
+# x1beta <- sqrt(17)/2
+
+## icc = 0.15
+# x1beta <- sqrt(11/3)/2
+
+## icc = 0.30
+x1beta <- 1/(2*sqrt(3))
+
+generate_data(
+  .n_sch = 5,
+  .n_stu = 5,
+  .u_resid_var = 0.2,
+  .clust_cov = c(.8, 1),
+  .wt_vec = c(0.5, 0.5),
+  .pct_mobile = 0,
+  .mean_x = 5,
+  .var_x = 4,
+  .mean_r = 0,
+  .var_r = 2,
+  .gamma_z = 0,
+  .gamma_x = c(10, x1beta),
+  .seed_start = 1
+)
 
 }
 }

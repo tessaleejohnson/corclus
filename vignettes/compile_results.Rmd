@@ -29,15 +29,25 @@ sub_path_results <- list.dirs(path_results)[-1]
 
 ```
 
+## Read in Results
+
+```{r, eval=FALSE}
+
+## load simulated data
+load(file.path(path, list.files(path, pattern = ".rda")))
+
+
+```
+
 ## Check Data Generation
 
 ```{r, eval=FALSE}
-# use a large number of schools to demonstrate
+# use a "large" number of schools to demonstrate
 # variance is calculated correctly (5 students per school because
-# this many schools creates a very wide dataset)
+# this many schools creates a very wide dataset and slow code)
 dat <-
   generate_data(
-    .n_sch = 500,
+    .n_sch = 100,
     .n_stu = 5,
     .u_resid_var = 0.2,
     .clust_cov = c(0.8, 0.4),
@@ -74,21 +84,12 @@ var(temp)
 ```
 
 
-## Read in Results
-
-```{r, eval=FALSE}
-
-## load simulated data
-load(file.path(path, list.files(path, pattern = ".rda")))
-
-hlm <- list(mod_list$hlm, mod_list$hlm, mod_list$hlm)
-mm <- list(mod_list$mm, mod_list$mm, mod_list$mm)
-
-```
-
 ## Produce Results Table
 
 ```{r, eval=FALSE}
+
+hlm <- list(mod_list$hlm, mod_list$hlm, mod_list$hlm)
+mm <- list(mod_list$mm, mod_list$mm, mod_list$mm)
 
 # set condition number
 cond_num = 1
@@ -131,94 +132,495 @@ mod_results <-
 
 ```{r, eval=FALSE}
 
-temp_dat_list <-
-  sub_path_results[1:3] %>%
+
+# function to get large amounts of data out of external folders
+
+get_data <- function(x) {
+
+  ## here's where the second purrr starts
+  
+  # enter a new purrr::map to read those data
+  x %>%
+    purrr::map(., ~{
+      
+      # explicitly state col_types to avoid printing the message 81*5 times
+      if (stringr::str_detect(x, "results_sumstat")) {
+        .col_types <-
+          readr::cols(
+            nsim = readr::col_double(),
+            mod = readr::col_double(),
+            form = readr::col_double(),
+            nsch = readr::col_double(),
+            nstu = readr::col_double(),
+            pctmob = readr::col_double(),
+            cor = readr::col_double(),
+            icc = readr::col_double(),
+            Dbar = readr::col_double(),
+            Dthetabar = readr::col_double(),
+            pD = readr::col_double(),
+            DIC = readr::col_double(),
+            N = readr::col_double()
+          )
+      } else {
+        .col_types <-
+          readr::cols(
+            nsim = readr::col_double(),
+            mod = readr::col_double(),
+            form = readr::col_double(),
+            nsch = readr::col_double(),
+            nstu = readr::col_double(),
+            pctmob = readr::col_double(),
+            cor = readr::col_double(),
+            icc = readr::col_double(),
+            est = readr::col_double(),
+            se = readr::col_double(),
+            stat = readr::col_double(),
+            p = readr::col_double(),
+            lwr = readr::col_double(),
+            upr = readr::col_double(),
+            ess = readr::col_double()
+          )
+      }
+      
+      # read the space-delimited data files and add a column indicating the
+      # parameter name (based on the file name)
+      x %>%
+        readr::read_delim(
+          file = .,
+          delim = " ",
+          col_types = .col_types
+        ) %>%
+        dplyr::mutate(
+          .data = .,
+          Parameter = x %>%
+            stringr::str_replace(., ".*/", "") %>%
+            stringr::str_replace_all(., "results_coef_|.txt", ""),
+          .after = "icc" 
+        )
+      
+    })
+      
+}
+
+
+# 50 schools
+
+# select only the files needed
+raw_results <- sub_path_results %>%
+  .[stringr::str_detect(., "nsch50")]
+
+# set progress bar
+purrr_bar <- progress::progress_bar$new(total = length(raw_results))
+
+# run purrr
+
+dat_list <-
+  raw_results %>%
   purrr::map(., ~{
+    
+    # progress bar
+    purrr_bar$tick()
     
     # get the list of files from each sub directory
     .paths <- file.path(.x, list.files(.x, pattern = ".txt"))
     
-    # enter a new purrr::map to read those data
-    .paths %>%
-      purrr::map(., ~{
-        
-        # explicitly state col_types to avoid printing the message 81*5 times
-        if (stringr::str_detect(.x, "results_sumstat")) {
-          .col_types <-
-            readr::cols(
-              nsim = readr::col_double(),
-              mod = readr::col_double(),
-              form = readr::col_double(),
-              nsch = readr::col_double(),
-              nstu = readr::col_double(),
-              pctmob = readr::col_double(),
-              cor = readr::col_double(),
-              icc = readr::col_double(),
-              Dbar = readr::col_double(),
-              Dthetabar = readr::col_double(),
-              pD = readr::col_double(),
-              DIC = readr::col_double(),
-              N = readr::col_double()
-            )
-        } else {
-          .col_types <-
-            readr::cols(
-              nsim = readr::col_double(),
-              mod = readr::col_double(),
-              form = readr::col_double(),
-              nsch = readr::col_double(),
-              nstu = readr::col_double(),
-              pctmob = readr::col_double(),
-              cor = readr::col_double(),
-              icc = readr::col_double(),
-              est = readr::col_double(),
-              se = readr::col_double(),
-              stat = readr::col_double(),
-              p = readr::col_double(),
-              lwr = readr::col_double(),
-              upr = readr::col_double(),
-              ess = readr::col_double()
-            )
-        }
-        
-        # read the space-delimited data files and add a column indicating the
-        # parameter name (based on the file name)
-        .x %>%
-          readr::read_delim(
-            file = .,
-            delim = " ",
-            col_types = .col_types
-          ) %>%
-          dplyr::mutate(
-            .data = .,
-            Parameter = .x %>%
-              stringr::str_replace(., ".*/", "") %>%
-              stringr::str_replace_all(., "results_coef_|.txt", ""),
-            .after = "icc" 
-          )
-        
-      })
-    
-  })
+    # start the progress bar
+    purrr::map(.paths, get_data)
+    })
 
+```
 
-temp_dat_reduce <-
-  temp_dat_list %>%
+## Recode Compiled Data
+
+```{r, eval=FALSE}
+
+# remove extraneous stuff
+dat_reduce <-
+  dat_list %>%
   purrr::map(., ~{
     .x[1:4]
   }) %>%
+  unlist(., recursive = FALSE) %>%
   purrr::reduce(., dplyr::bind_rows) %>%
   dplyr::select(., -tidyselect::any_of(c("stat", "p", "lwr", "upr"))) %>%
   dplyr::arrange(., nsim, form, icc, mod)
 
+
+# set the values of x1beta used in the study
+x1beta <- list(
+  icc_05 = sqrt(17)/2,
+  icc_15 = sqrt(11/3)/2,
+  icc_30 = 1/(2*sqrt(3))
+)
+
+# include true value in dataset
+results <-
+  dat_reduce %>%
+  dplyr::filter(., !is.na(est), cor != 0.50) %>%
+  dplyr::mutate(
+    true_par = dplyr::case_when(
+      
+      ## fixed effect - intercept
+      Parameter == "fp_int" & form == 3 ~ 10,
+      Parameter == "fp_int" & icc == 0.05 ~ 10 + 5 * x1beta[["icc_05"]],
+      Parameter == "fp_int" & icc == 0.15 ~ 10 + 5 * x1beta[["icc_15"]],
+      Parameter == "fp_int" & icc == 0.30 ~ 10 + 5 * x1beta[["icc_30"]],
+      
+      ## fixed effect - x1 coefficient
+      Parameter == "fp_x1" & icc == 0.05 ~ x1beta[["icc_05"]],
+      Parameter == "fp_x1" & icc == 0.15 ~ x1beta[["icc_15"]],
+      Parameter == "fp_x1" & icc == 0.30 ~ x1beta[["icc_30"]],
+      
+      ## level-1 random effect
+      
+      # models without controlling for x
+      Parameter == "rp_int_v1" & form %in% 1:2 & icc == 0.05 ~
+        calc_exp_icc(.gamma_x = c(0, x1beta[["icc_05"]]))[["l1_var"]],
+      Parameter == "rp_int_v1" & form %in% 1:2 & icc == 0.15 ~
+        calc_exp_icc(.gamma_x = c(0, x1beta[["icc_15"]]))[["l1_var"]],
+      Parameter == "rp_int_v1" & form %in% 1:2 & icc == 0.30 ~
+        calc_exp_icc(.gamma_x = c(0, x1beta[["icc_30"]]))[["l1_var"]],
+      
+      # models that control for x
+      Parameter == "rp_int_v1" & form == 3 ~ 2,
+      
+      ## level-2 random effect
+      
+      # pctmob = 0
+      Parameter == "rp_int_v2" & pctmob == 0 ~
+        calc_exp_l2var(
+          .pct_mobile = 0,
+          .clust_cov = c(0.8, 1)
+        ),
+      
+      # pctmob = 0.25, cor varies 
+      Parameter == "rp_int_v2" & cor == 0.00 & pctmob == 0.25 ~
+        calc_exp_l2var(
+          .pct_mobile = 0.25,
+          .clust_cov = c(0.8, 0.00)
+        ),
+      Parameter == "rp_int_v2" & cor == 0.25 & pctmob == 0.25 ~
+        calc_exp_l2var(
+          .pct_mobile = 0.25,
+          .clust_cov = c(0.8, 0.25)
+        ),
+      
+      # pctmob = 0.50, cor varies 
+      Parameter == "rp_int_v2" & cor == 0.00 & pctmob == 0.50 ~
+        calc_exp_l2var(
+          .pct_mobile = 0.50,
+          .clust_cov = c(0.8, 0.00)
+        ),
+      Parameter == "rp_int_v2" & cor == 0.25 & pctmob == 0.50 ~
+        calc_exp_l2var(
+          .pct_mobile = 0.50,
+          .clust_cov = c(0.8, 0.25)
+        ),
+      
+      # no matches
+      TRUE ~ NA_real_
+    ),
+    .after = "icc"
+  )
+
 ```
 
-## Analyze Compiled Data
+## Compute Bias, Etc.
 
 ```{r, eval=FALSE}
 
-temp_dat_reduce %>%
-  dplyr::filter(., !is.na(est), Parameter == "fp_int")
+# get aggregated values grouped by condition
+agg_results <- 
+  results %>%
+  dplyr::group_by(., Parameter, mod, form, nsch, pctmob, cor, icc) %>%
+  dplyr::summarise(
+    avg_est = mean(est, na.rm = TRUE),
+    sd_est = sd(est, na.rm = TRUE),
+    avg_se = mean(se, na.rm = TRUE),
+    avg_ess = mean(ess, na.rm = TRUE)
+  )
+  
+full_results <-
+  results %>%
+  dplyr::left_join(
+    x = ., 
+    agg_results, 
+    by = c("Parameter", "mod", "form", "nsch", "pctmob", "cor", "icc")
+  ) %>%
+  dplyr::mutate(
+    mse = (((sum(est - avg_est)^2)/1000) + (avg_est - true_par)^2),
+    cov_95 = dplyr::if_else(
+      (true_par > (est + 1.96 * se)) | (true_par < (est - 1.96 * se)),
+      true = 0,
+      false = 1
+    ),
+    sig_05 = dplyr::if_else(
+      abs((est - 0) / se) > 1.96,
+      true = 1,
+      false = 0
+    )
+  )
+
+
+final_results <-
+  full_results %>%
+  dplyr::group_by(., Parameter, mod, form, nsch, pctmob, cor, icc) %>%
+  dplyr::summarise(
+    avg_true_par = mean(true_par, na.rm = TRUE),
+    avg_est = mean(avg_est, na.rm = TRUE),
+    sd_est = mean(sd_est, na.rm = TRUE),
+    avg_se = mean(avg_se, na.rm = TRUE),
+    avg_mse = mean(mse, na.rm = TRUE),
+    avg_cov_95 = mean(cov_95, na.rm = TRUE),
+    avg_sig_05 = mean(sig_05, na.rm = TRUE),
+    avg_ess = mean(avg_ess, na.rm = TRUE)
+  )
+
+
+```
+
+## Save Results
+
+```{r, eval=FALSE}
+
+usethis::use_data(final_results)
+usethis::use_data(full_results)
+
+```
+
+
+## Examine Final Results
+
+```{r, eval=FALSE}
+
+final_results %>%
+  dplyr::mutate(
+    dplyr::across(is.numeric, round, digits = 2)
+  )
+
+```
+
+## Test Factors
+
+```{r, eval=FALSE}
+
+lm_list <- 
+  c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>% 
+  purrr::map(., ~{
+    final_results %>%
+      dplyr::filter(Parameter == .x) %>%
+      dplyr::mutate(
+        mod = forcats::as_factor(mod),
+        form = forcats::as_factor(form),
+        pctmob = forcats::as_factor(pctmob),
+        cor = forcats::as_factor(cor),
+        icc = forcats::as_factor(icc),
+      )
+    }) %>%
+  rlang::set_names(., c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2"))
+
+
+lm_list$fp_int %>%
+  lm(avg_mse ~ mod + form + pctmob + cor + icc, data = .) %>%
+  summary(.)
+
+lm_list$fp_x1 %>%
+  lm(avg_mse ~ mod + pctmob + cor + icc, data = .) %>%
+  summary(.)
+
+lm_list$rp_int_v2 %>%
+  lm(avg_mse ~ mod + form + pctmob + cor + icc, data = .) %>%
+  summary(.)
+
+             
+```
+
+## Plot Results
+
+### Standard Error
+
+```{r, eval=FALSE}
+
+# standard error
+
+c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>%
+  purrr::map2(
+    .x = .,
+    .y = c("Fixed Intercept", "Fixed X Coef", 
+           "Random Intercept (L1)", "Random Intercept (L2)"),
+    .f = ~{
+      p <-
+        full_results %>%
+        dplyr::filter(Parameter == .x) %>%
+        dplyr::slice_sample(., n = NROW(.) / 216) %>%
+        ggplot2::ggplot(
+          data = .,
+          ggplot2::aes(
+            y = se,
+            x = forcats::as_factor(mod),
+            color = forcats::as_factor(form)
+          )
+        ) +
+        ggbeeswarm::geom_beeswarm() +
+        ggplot2::scale_color_viridis_d(
+          name = "Model Specification",
+          labels = c("Unconditional", "Control for Z", "Control for X & Z"),
+          option = "D", end = 0.85
+        ) +
+        ggplot2::scale_x_discrete(
+          name = "Estimated Model", 
+          labels = c("HLM", "MMREM")
+        ) +
+        ggplot2::theme(
+          legend.position = "top"
+        ) +
+        ggplot2::ylab("Standard Error of the Estimate") +
+        ggplot2::ggtitle(.y)
+      
+      # save plot
+      ggplot2::ggsave(
+        file.path(path, paste0("se_", .y, ".png"))
+      )
+    })
+
+
+```
+
+### Coverage
+
+```{r, eval=FALSE}
+
+# coverage
+
+fct_dat <- final_results %>%
+  dplyr::mutate(
+    .data = .,
+    mod = forcats::as_factor(mod),
+    form = forcats::as_factor(form),
+    pctmob = forcats::as_factor(pctmob),
+    cor = forcats::as_factor(cor),
+    icc = forcats::as_factor(icc)
+  )
+
+c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>%
+  purrr::map2(.,
+    .y = c("Fixed Intercept", "Fixed X Coef",
+           "Random Intercept (L1)", "Random Intercept (L2)"),
+    .f = ~{
+      
+      temp <-
+        fct_dat %>%
+        dplyr::filter(., Parameter == .x)
+      
+      temp %>%
+        ggplot2::ggplot(
+          data = .,
+          ggplot2::aes(
+            y = avg_cov_95,
+            x = icc,
+            color = pctmob,
+            shape = cor
+          )
+        ) +
+        ggbeeswarm::geom_beeswarm() +
+        ggplot2::scale_color_viridis_d(
+          name = "Percent Mobility",
+          option = "D", end = 0.85
+        ) +
+        ggplot2::scale_x_discrete(
+          name = "ICC"
+        ) +
+        ggplot2::scale_shape_discrete(
+         name = "Cluster Correlation"
+        ) +
+        ggplot2::theme(
+          legend.position = "top"
+        ) +
+        ggplot2::ggtitle(.y)
+
+      # save plot
+      ggplot2::ggsave(
+        file.path(path, paste0("cov95_", .y, ".png"))
+      )
+    })
+
+
+```
+
+### MSE
+
+```{r, eval=FALSE}
+
+# coverage
+
+fct_dat <- final_results %>%
+  dplyr::mutate(
+    .data = .,
+    mod = forcats::as_factor(mod),
+    form = forcats::as_factor(form),
+    pctmob = forcats::as_factor(pctmob),
+    cor = forcats::as_factor(cor),
+    icc = forcats::as_factor(icc)
+  )
+
+c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>%
+  purrr::map2(.,
+    .y = c("Fixed Intercept", "Fixed X Coef",
+           "Random Intercept (L1)", "Random Intercept (L2)"),
+    .f = ~{
+      
+      temp <-
+        fct_dat %>%
+        dplyr::filter(., Parameter == .x)
+      
+      temp %>%
+        ggplot2::ggplot(
+          data = .,
+          ggplot2::aes(
+            y = avg_mse,
+            x = icc,
+            color = pctmob,
+            shape = cor
+          )
+        ) +
+        ggbeeswarm::geom_beeswarm() +
+        ggplot2::scale_color_viridis_d(
+          name = "Percent Mobility",
+          option = "D", end = 0.85
+        ) +
+        ggplot2::scale_x_discrete(
+          name = "ICC"
+        ) +
+        ggplot2::scale_shape_discrete(
+         name = "Cluster Correlation"
+        ) +
+        ggplot2::theme(
+          legend.position = "top"
+        ) +
+        ggplot2::ggtitle(.y)
+
+      # save plot
+      ggplot2::ggsave(
+        file.path(path, paste0("mse_", .y, ".png"))
+      )
+    })
+
+
+```
+
+## Write Tables
+
+```{r}
+
+#tab_results <- 
+  c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>%
+  purrr::map(., ~{
+    final_results %>% dplyr::filter(., Parameter == .x) %>%
+      readr::write_csv(., file = file.path(path, paste0(.x, "_res.csv")))
+  })
+
+
+  
 
 ```
 

@@ -2,3 +2,4 @@
 inst/doc
 inst/scripts
 R/deprecated
+inst/extdata

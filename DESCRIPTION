@@ -30,8 +30,13 @@ Imports:
     readr,
     here,
     mvnfast,
-    matrixcalc
+    matrixcalc,
+    progress,
+    ggplot2,
+    ggbeeswarm
 Suggests: 
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)

@@ -3,6 +3,8 @@
 export("%>%")
 export(assign_mobility)
 export(build_mm_list)
+export(calc_exp_icc)
+export(calc_exp_l2var)
 export(expand_sch)
 export(extract_estimates)
 export(extract_groups)
