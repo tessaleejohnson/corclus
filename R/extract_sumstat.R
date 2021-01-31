@@ -26,9 +26,10 @@ extract_sumstat <-
 
     # extract DIC info and coerce to data.frame, keeping the rownames as
     # parameter identifiers
-    .mod[["BDIC"]] %>%
+    .dat <- .mod@BDIC %>%
       data.frame(Estimate = .) %>%
       tibble::rownames_to_column(., var = "Parameter") %>%
       tibble::as_tibble(.)
 
   }
+

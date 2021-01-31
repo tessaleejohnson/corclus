@@ -138,7 +138,7 @@ generate_data <-
     # expand the school information
     sch_wider <-
       sch_inf %>%
-      tibble::tibble(.) %>%
+      tibble::as_tibble(.) %>%
       tibble::rowid_to_column(., var = "stu_id") %>%
       dplyr::mutate(
         .data = .,

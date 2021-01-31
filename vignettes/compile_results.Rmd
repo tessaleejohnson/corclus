@@ -21,21 +21,20 @@ knitr::opts_chunk$set(
 devtools::load_all()
 
 ## set paths
-path <- system.file("extdata", package = "corclus", mustWork = TRUE)
+path <- system.file("inst", package = "corclus", mustWork = TRUE)
 path_results <- here::here(file.path("../", "SimData/Results/"))
 
 ## get subdirectories for path_results (the first is just path_results)
 sub_path_results <- list.dirs(path_results)[-1]
 
-```
-
-## Read in Results
-
-```{r, eval=FALSE}
-
 ## load simulated data
-load(file.path(path, list.files(path, pattern = ".rda")))
-
+load(
+  file.path(
+    path, 
+    "extdata", 
+    list.files(file.path(path, "extdata"), pattern = ".rda")
+  )
+)
 
 ```
 
@@ -84,7 +83,7 @@ var(temp)
 ```
 
 
-## Produce Results Table
+## Produce Results Table for One Replication
 
 ```{r, eval=FALSE}
 
@@ -133,7 +132,8 @@ mod_results <-
 ```{r, eval=FALSE}
 
 
-# function to get large amounts of data out of external folders
+## function to get data from large results files (~180 GB)
+# saved in external folders
 
 get_data <- function(x) {
 
@@ -203,7 +203,7 @@ get_data <- function(x) {
 }
 
 
-# 50 schools
+## Requires External Drive to be Connected
 
 # select only the files needed
 raw_results <- sub_path_results %>%
@@ -348,7 +348,7 @@ full_results <-
     by = c("Parameter", "mod", "form", "nsch", "pctmob", "cor", "icc")
   ) %>%
   dplyr::mutate(
-    mse = (((sum(est - avg_est)^2)/1000) + (avg_est - true_par)^2),
+    mse = (sum((est - avg_est)^2)/1000) + ((avg_est - true_par)^2),
     cov_95 = dplyr::if_else(
       (true_par > (est + 1.96 * se)) | (true_par < (est - 1.96 * se)),
       true = 0,
@@ -379,12 +379,15 @@ final_results <-
 
 ```
 
-## Save Results
+## Load/Save Results
 
 ```{r, eval=FALSE}
 
 usethis::use_data(final_results)
 usethis::use_data(full_results)
+
+data("final_results", package = "corclus")
+data("full_results", package = "corclus")
 
 ```
 
@@ -395,7 +398,7 @@ usethis::use_data(full_results)
 
 final_results %>%
   dplyr::mutate(
-    dplyr::across(is.numeric, round, digits = 2)
+    dplyr::across(where(is.numeric), round, digits = 2)
   )
 
 ```
@@ -408,8 +411,13 @@ lm_list <-
   c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>% 
   purrr::map(., ~{
     final_results %>%
-      dplyr::filter(Parameter == .x) %>%
+      dplyr::filter(Parameter == .x, pctmob != 0) %>%
       dplyr::mutate(
+        mod = dplyr::if_else(mod == 1, "HLM", "MMREM"),
+        form = dplyr::if_else(form == 1, "Int-Only", "L2")
+      ) %>%
+      dplyr::mutate(
+        avg_mse = avg_mse * 1000,
         mod = forcats::as_factor(mod),
         form = forcats::as_factor(form),
         pctmob = forcats::as_factor(pctmob),
@@ -420,16 +428,29 @@ lm_list <-
   rlang::set_names(., c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2"))
 
 
+
+print("fp_int: avg_mse")
 lm_list$fp_int %>%
-  lm(avg_mse ~ mod + form + pctmob + cor + icc, data = .) %>%
+  lm(
+    avg_mse ~ mod + pctmob + form*cor,
+    data = .
+  ) %>%
   summary(.)
 
-lm_list$fp_x1 %>%
-  lm(avg_mse ~ mod + pctmob + cor + icc, data = .) %>%
+print("rp_int_v1: avg_mse")
+lm_list$rp_int_v1 %>%
+  lm(
+    avg_mse ~ mod + pctmob + form*cor,
+    data = .
+  ) %>%
   summary(.)
 
+print("rp_int_v2: avg_mse")
 lm_list$rp_int_v2 %>%
-  lm(avg_mse ~ mod + form + pctmob + cor + icc, data = .) %>%
+  lm(
+    avg_mse ~ mod + pctmob + form*cor, 
+    data = .
+  ) %>%
   summary(.)
 
              
@@ -437,23 +458,25 @@ lm_list$rp_int_v2 %>%
 
 ## Plot Results
 
-### Standard Error (all reps)
+### Mean Standard Error
 
 ```{r, eval=FALSE}
 
-# coverage
+# mse
 
 fct_dat <- final_results %>%
   dplyr::mutate(
     .data = .,
-    mod = forcats::as_factor(mod),# `1` = "HLM", `2` = "MMREM"),
+    avg_mse = avg_mse * 1000,
+    mod = forcats::as_factor(mod),
     form = forcats::as_factor(form),
     pctmob = forcats::as_factor(pctmob),
     cor = forcats::as_factor(cor),
     icc = forcats::as_factor(icc)
   ) %>%
   dplyr::mutate(
-    mod = forcats::fct_recode(mod, HLM = "1", MMREM = "2")
+    mod = forcats::fct_recode(mod, HLM = "1", MMREM = "2"),
+    form = forcats::fct_recode(form, Null = "1", L2 = "2", `L1 & L2` = "3")
   )
 
 c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>%
@@ -481,199 +504,22 @@ c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>%
           name = "Percent Mobility",
           option = "D", end = 0.85
         ) +
+        ggplot2::scale_x_discrete(
+          name = "Intraclass Correlation"
+        ) +
         ggplot2::scale_shape_discrete(
           name = "Cluster Correlation"
-        ) +
-        ggplot2::scale_x_discrete(
-          name = "Model Specification", 
-          labels = c("Null", "L2", "L1 & L2")
         ) +
         ggplot2::theme(
           legend.position = "top"
         ) +
         ggplot2::ylab("Mean Square Error of the Estimate") +
         ggplot2::ggtitle(.y) +
-        ggplot2::facet_wrap(
-          ggplot2::vars(mod)
-          )
+        ggplot2::facet_wrap(ggplot2::vars(mod))
       
       # save plot
       ggplot2::ggsave(
-        file.path(path, paste0("avgse_wrap_", .y, ".png"))
-      )
-    })
-
-
-```
-
-### MSE (all reps)
-
-```{r, eval=FALSE}
-
-# standard error
-
-c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>%
-  purrr::map2(
-    .x = .,
-    .y = c("Fixed Intercept", "Fixed X Coef", 
-           "Random Intercept (L1)", "Random Intercept (L2)"),
-    .f = ~{
-      
-        full_results %>%
-        dplyr::filter(Parameter == .x) %>%
-        dplyr::slice_sample(., n = NROW(.) / 216) %>%
-        ggplot2::ggplot(
-          data = .,
-          ggplot2::aes(
-            y = mse,
-            x = forcats::as_factor(mod),
-            color = forcats::as_factor(form)
-          )
-        ) +
-        ggbeeswarm::geom_beeswarm() +
-        ggplot2::scale_color_viridis_d(
-          name = "Model Specification",
-          labels = c("Unconditional", "Control for Z", "Control for X & Z"),
-          option = "D", end = 0.85
-        ) +
-        ggplot2::scale_x_discrete(
-          name = "Estimated Model", 
-          labels = c("HLM", "MMREM")
-        ) +
-        ggplot2::theme(
-          legend.position = "top"
-        ) +
-        ggplot2::ylab("Mean Standard Error") +
-        ggplot2::ggtitle(.y)
-      
-      # save plot
-      ggplot2::ggsave(
-        file.path(path, paste0("mse_indiv_", .y, ".png"))
-      )
-    })
-
-
-```
-
-
-### Coverage
-
-```{r, eval=FALSE}
-
-# coverage
-
-fct_dat <- final_results %>%
-  dplyr::mutate(
-    .data = .,
-    mod = forcats::as_factor(mod),
-    form = forcats::as_factor(form),
-    pctmob = forcats::as_factor(pctmob),
-    cor = forcats::as_factor(cor),
-    icc = forcats::as_factor(icc)
-  )
-
-c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>%
-  purrr::map2(.,
-    .y = c("Fixed Intercept", "Fixed X Coef",
-           "Random Intercept (L1)", "Random Intercept (L2)"),
-    .f = ~{
-      
-      temp <-
-        fct_dat %>%
-        dplyr::filter(., Parameter == .x)
-      
-      temp %>%
-        ggplot2::ggplot(
-          data = .,
-          ggplot2::aes(
-            y = avg_cov_95,
-            x = icc,
-            color = pctmob,
-            shape = cor
-          )
-        ) +
-        ggbeeswarm::geom_beeswarm() +
-        ggplot2::scale_color_viridis_d(
-          name = "Percent Mobility",
-          option = "D", end = 0.85
-        ) +
-        ggplot2::scale_x_discrete(
-          name = "ICC"
-        ) +
-        ggplot2::scale_shape_discrete(
-         name = "Cluster Correlation"
-        ) +
-        ggplot2::theme(
-          legend.position = "top"
-        ) +
-        ggplot2::ggtitle(.y)
-
-      # save plot
-      ggplot2::ggsave(
-        file.path(path, paste0("cov95_", .y, ".png"))
-      )
-    })
-
-
-```
-
-### MSE
-
-```{r, eval=FALSE}
-
-# coverage
-
-fct_dat <- final_results %>%
-  dplyr::mutate(
-    .data = .,
-    mod = forcats::as_factor(mod),
-    form = forcats::as_factor(form),
-    pctmob = forcats::as_factor(pctmob),
-    cor = forcats::as_factor(cor),
-    icc = forcats::as_factor(icc)
-  )
-
-c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>%
-  purrr::map2(.,
-    .y = c("Fixed Intercept", "Fixed X Coef",
-           "Random Intercept (L1)", "Random Intercept (L2)"),
-    .f = ~{
-      
-      temp <-
-        fct_dat %>%
-        dplyr::filter(., Parameter == .x)
-      
-      temp %>%
-        ggplot2::ggplot(
-          data = .,
-          ggplot2::aes(
-            y = avg_mse,
-            x = form,
-            color = pctmob,
-            shape = cor
-          )
-        ) +
-        ggbeeswarm::geom_beeswarm() +
-        ggplot2::scale_color_viridis_d(
-          name = "Percent Mobility",
-          option = "D", end = 0.85
-        ) +
-        ggplot2::scale_x_discrete(
-          name = "Model Specification",
-          labels = c("Null", "L2 Covariate", "L1 & L2 Covariate")
-        ) +
-        ggplot2::scale_shape_discrete(
-         name = "Cluster Correlation"
-        ) +
-        ggplot2::theme(
-          legend.position = "top"
-        ) +
-        ggplot2::ylab("Mean Square Error") +
-        ggplot2::ggtitle(.y)
-
-      # save plot
-      ggplot2::ggsave(
-        file.path(path, paste0("mse_form_", .y, ".png"))
+        file.path(path, "figures", paste0("avgse_wrap_", .y, ".png"))
       )
     })
 
@@ -687,12 +533,40 @@ c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>%
 #tab_results <- 
   c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>%
   purrr::map(., ~{
-    final_results %>% dplyr::filter(., Parameter == .x) %>%
-      readr::write_csv(., file = file.path(path, paste0(.x, "_res.csv")))
+    final_results %>%
+      dplyr::ungroup(.) %>%
+      dplyr::select(., -nsch, -avg_sig_05) %>%
+      dplyr::filter(., Parameter == .x) %>%
+      dplyr::mutate(
+        .data = .,
+        mod = dplyr::if_else(mod == 1, "HLM", "MMREM"),
+        form = dplyr::case_when(
+          form == 1 ~ "Null",
+          form == 2 ~ "L2",
+          form == 3 ~ "L1 & L2"
+        )
+      ) %>%
+      dplyr::rename(
+        .data = .,
+        `Estimation Model` = mod,
+        `Model Specification` = form,
+        `Percent Mobility` = pctmob,
+        `Cluster Correlation` = cor,
+        ICC = icc,
+        `Population Parameter` = avg_true_par,
+        `Mean(Est)` = avg_est,
+        `SD(EST)` = sd_est,
+        `Mean(SE)` = avg_se,
+        MSE = avg_mse,
+        Coverage = avg_cov_95,
+        `Mean(ESS)` = avg_ess
+      ) %>%
+      readr::write_csv(
+        x = ., 
+        file = file.path(path, "tables", paste0(.x, "_res.csv"))
+      )
   })
 
-
-  
 
 ```
 

@@ -35,14 +35,16 @@ extract_estimates <-
   ) {
 
     ##--setup--##
-    .draws <- .mod[["chains"]]
+    .draws <- .mod@chains
 
     if (.mcmc_nchains > 1) {
       .draws <- Reduce(rbind, .draws)
+    } else {
+      .draws <- as.data.frame(.draws)
     }
 
-    # coerce .draws to a tibble
-    .dat <- .draws %>%
+    # extract data and rebuild as tibble
+    .dat <- apply(.draws, 2, as.vector) %>%
       tibble::as_tibble(.)
 
 
