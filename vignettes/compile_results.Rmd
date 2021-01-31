@@ -437,7 +437,76 @@ lm_list$rp_int_v2 %>%
 
 ## Plot Results
 
-### Standard Error
+### Standard Error (all reps)
+
+```{r, eval=FALSE}
+
+# coverage
+
+fct_dat <- final_results %>%
+  dplyr::mutate(
+    .data = .,
+    mod = forcats::as_factor(mod),# `1` = "HLM", `2` = "MMREM"),
+    form = forcats::as_factor(form),
+    pctmob = forcats::as_factor(pctmob),
+    cor = forcats::as_factor(cor),
+    icc = forcats::as_factor(icc)
+  ) %>%
+  dplyr::mutate(
+    mod = forcats::fct_recode(mod, HLM = "1", MMREM = "2")
+  )
+
+c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>%
+  purrr::map2(.,
+    .y = c("Fixed Intercept", "Fixed X Coef",
+           "Random Intercept (L1)", "Random Intercept (L2)"),
+    .f = ~{
+      
+      temp <-
+        fct_dat %>%
+        dplyr::filter(., Parameter == .x)
+      
+      temp %>%
+        ggplot2::ggplot(
+          data = .,
+          ggplot2::aes(
+            y = avg_mse,
+            x = form,
+            color = pctmob,
+            shape = cor
+          )
+        ) +
+        ggbeeswarm::geom_beeswarm() +
+        ggplot2::scale_color_viridis_d(
+          name = "Percent Mobility",
+          option = "D", end = 0.85
+        ) +
+        ggplot2::scale_shape_discrete(
+          name = "Cluster Correlation"
+        ) +
+        ggplot2::scale_x_discrete(
+          name = "Model Specification", 
+          labels = c("Null", "L2", "L1 & L2")
+        ) +
+        ggplot2::theme(
+          legend.position = "top"
+        ) +
+        ggplot2::ylab("Mean Square Error of the Estimate") +
+        ggplot2::ggtitle(.y) +
+        ggplot2::facet_wrap(
+          ggplot2::vars(mod)
+          )
+      
+      # save plot
+      ggplot2::ggsave(
+        file.path(path, paste0("avgse_wrap_", .y, ".png"))
+      )
+    })
+
+
+```
+
+### MSE (all reps)
 
 ```{r, eval=FALSE}
 
@@ -449,14 +518,14 @@ c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>%
     .y = c("Fixed Intercept", "Fixed X Coef", 
            "Random Intercept (L1)", "Random Intercept (L2)"),
     .f = ~{
-      p <-
+      
         full_results %>%
         dplyr::filter(Parameter == .x) %>%
         dplyr::slice_sample(., n = NROW(.) / 216) %>%
         ggplot2::ggplot(
           data = .,
           ggplot2::aes(
-            y = se,
+            y = mse,
             x = forcats::as_factor(mod),
             color = forcats::as_factor(form)
           )
@@ -474,17 +543,18 @@ c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>%
         ggplot2::theme(
           legend.position = "top"
         ) +
-        ggplot2::ylab("Standard Error of the Estimate") +
+        ggplot2::ylab("Mean Standard Error") +
         ggplot2::ggtitle(.y)
       
       # save plot
       ggplot2::ggsave(
-        file.path(path, paste0("se_", .y, ".png"))
+        file.path(path, paste0("mse_indiv_", .y, ".png"))
       )
     })
 
 
 ```
+
 
 ### Coverage
 
@@ -578,7 +648,7 @@ c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>%
           data = .,
           ggplot2::aes(
             y = avg_mse,
-            x = icc,
+            x = form,
             color = pctmob,
             shape = cor
           )
@@ -589,7 +659,8 @@ c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>%
           option = "D", end = 0.85
         ) +
         ggplot2::scale_x_discrete(
-          name = "ICC"
+          name = "Model Specification",
+          labels = c("Null", "L2 Covariate", "L1 & L2 Covariate")
         ) +
         ggplot2::scale_shape_discrete(
          name = "Cluster Correlation"
@@ -597,11 +668,12 @@ c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>%
         ggplot2::theme(
           legend.position = "top"
         ) +
+        ggplot2::ylab("Mean Square Error") +
         ggplot2::ggtitle(.y)
 
       # save plot
       ggplot2::ggsave(
-        file.path(path, paste0("mse_", .y, ".png"))
+        file.path(path, paste0("mse_form_", .y, ".png"))
       )
     })
 
