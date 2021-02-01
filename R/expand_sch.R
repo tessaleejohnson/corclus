@@ -28,8 +28,6 @@
 #' \code{.n_stu * .n_sch}. The columns of the input data (\code{.sch_dat}) are
 #' retained in the output.
 #'
-#' @export
-#'
 #' @examples \dontrun{
 #'
 #' # generate data using the gen_u_mmrem function

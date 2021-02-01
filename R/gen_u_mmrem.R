@@ -46,7 +46,6 @@
 #' after predicting u_residual from z_predictor) for each
 #' school. Each element is vector with length equal to \code{.n_sch}.
 #'
-#' @export
 #'
 #' @examples \dontrun{
 #'

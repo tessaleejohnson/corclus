@@ -33,7 +33,10 @@ Imports:
     matrixcalc,
     progress,
     ggplot2,
-    ggbeeswarm
+    ggbeeswarm,
+    furrr,
+    progressr,
+    tictoc
 Suggests: 
     knitr,
     rmarkdown

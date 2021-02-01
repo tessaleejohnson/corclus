@@ -17,7 +17,7 @@ generate_data(
   .var_r = 2,
   .gamma_z = 0,
   .gamma_x = c(10, sqrt(17)/2),
-  .seed_start = 1,
+  .seed_start = NULL,
   ...
 )
 }
@@ -46,7 +46,7 @@ coefficients, including the intercept).}
 
 \item{.seed_start}{Numeric scalar. The starting seed value. Each function
 in this script that uses random number generation will take this starting
-seed and add some noise to it. Defaults to 1.}
+seed and add some noise to it. Defaults to NULL.}
 
 \item{...}{Other parameters passed to \code{\link{assign_mobility}}.}
 }

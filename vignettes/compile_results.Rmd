@@ -43,7 +43,8 @@ load(
 ```{r, eval=FALSE}
 # use a "large" number of schools to demonstrate
 # variance is calculated correctly (5 students per school because
-# this many schools creates a very wide dataset and slow code)
+# this many schools creates a very wide dataset - more than this
+# takes up too much R memory)
 dat <-
   generate_data(
     .n_sch = 100,
@@ -528,7 +529,7 @@ c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>%
 
 ## Write Tables
 
-```{r}
+```{r, eval=FALSE}
 
 #tab_results <- 
   c("fp_int", "fp_x1", "rp_int_v1", "rp_int_v2") %>%

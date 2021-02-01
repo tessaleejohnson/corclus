@@ -22,7 +22,7 @@
 #'
 #' @param .seed_start Numeric scalar. The starting seed value. Each function
 #' in this script that uses random number generation will take this starting
-#' seed and add some noise to it. Defaults to 1.
+#' seed and add some noise to it. Defaults to NULL.
 #'
 #' @param ... Other parameters passed to \code{\link{assign_mobility}}.
 #'
@@ -84,7 +84,7 @@ generate_data <-
     .var_r = 2,
     .gamma_z = 0,
     .gamma_x = c(10, sqrt(17)/2),
-    .seed_start = 1,
+    .seed_start = NULL,
     ...
   ) {
 
@@ -92,20 +92,20 @@ generate_data <-
 
     sch_inf <-
       gen_u_mmrem(
+        .seedling = .seed_start + 68,
         .n_sch = .n_sch,
         .u_resid_var = .u_resid_var,
         .clust_cov = .clust_cov,
-        .gamma_z = .gamma_z,
-        .seedling = .seed_start + 1
+        .gamma_z = .gamma_z
       ) %>%
       expand_sch(., .n_sch = .n_sch, .n_stu = .n_stu) %>%
       assign_mobility(
         .sch_exp = .,
+        .seedling = .seed_start + 41,
         .n_sch = .n_sch,
         .wt_vec = .wt_vec,
         .wt_nonmob = FALSE,
         .pct_mobile = .pct_mobile,
-        .seedling = .seed_start + 2,
         ...
       )
 
@@ -188,9 +188,9 @@ generate_data <-
       dplyr::mutate(
         .data = .,
         gen_xr_rnorm(
+          .seedling = .seed_start + 419,
           .n_stu = .n_stu,
           .n_sch = .n_sch,
-          .seedling = .seed_start + 3,
           .mean_x = .mean_x,
           .var_x = .var_x,
           .mean_r = .mean_r,

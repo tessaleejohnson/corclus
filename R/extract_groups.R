@@ -25,7 +25,6 @@
 #' selecting the desired capture group, \code{.tag_groups}, and returning
 #' the unique values of the result.
 #'
-#' @export
 #'
 #' @examples \dontrun{
 #'

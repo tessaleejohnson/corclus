@@ -39,7 +39,6 @@
 #' the variance-covariance matrix for a school-level predictor, z. This matrix
 #' can be used to generate multivariate normal values for predictor z.
 #'
-#' @export
 #'
 #' @examples \dontrun{
 #'
