@@ -7,6 +7,10 @@
 # rlang
 # progress
 # furrr
+# future
+# progressr
+# tictoc
+# glue
 #
 # Internal Dependencies:
 # generate_data
@@ -74,7 +78,7 @@ run_sim_datagen <-
     .n_reps = 1,
     .seed_start = 33,
     .n_cores = future::availableCores() - 1,
-    .plan = future::sequential,
+    .plan = c("sequential", "multisession"),
     .n_sch = 50,
     .n_stu = 50,
     .u_resid_var = 0.2,
@@ -99,9 +103,15 @@ run_sim_datagen <-
 
     ##--setup--##
 
-    ## setup cores for future_pmap
+    .plan <- match.arg(.plan, choices = c("sequential", "multisession"))
 
-    future::plan(.plan, workers = .n_cores)
+    ## setup cores for future_pmap
+    if (.plan == "sequential") {
+      future::plan(future::sequential)
+    } else if (.plan == future::multisession) {
+      futre::plan(future::multisession, workers = .n_cores)
+    }
+
 
     ## set up .n_reps to be a vector
     if (length(.n_reps) == 1) {
@@ -315,7 +325,7 @@ run_sim_datagen_inner <-
     ...
   ){
 
-    ##--start by setting the random seed--##
+    ##--start by setting the random seed for the inner loop--##
 
     .seed_start <- round(runif(1) * 1e6)
 

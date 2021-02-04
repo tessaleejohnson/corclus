@@ -8,7 +8,7 @@ run_sim_datagen(
   .n_reps = 1,
   .seed_start = 33,
   .n_cores = future::availableCores() - 1,
-  .plan = future::sequential,
+  .plan = c("sequential", "multisession"),
   .n_sch = 50,
   .n_stu = 50,
   .u_resid_var = 0.2,

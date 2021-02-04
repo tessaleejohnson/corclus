@@ -36,7 +36,8 @@ Imports:
     ggbeeswarm,
     furrr,
     progressr,
-    tictoc
+    tictoc,
+    future
 Suggests: 
     knitr,
     rmarkdown
