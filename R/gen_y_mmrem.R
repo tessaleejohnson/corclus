@@ -20,40 +20,7 @@
 #'
 #' NOTE: function has been changed and documentation requires an update
 #'
-#' @param .gamma_x Numeric vector with length p (where p is the number of model
-#' coefficients, including the intercept).
-#'
-#' @param .x_predictor Numeric matrix with dimensions n x p (where n is the num
-#' of persons and p is the number of coefficients, including the intercept).
-#' The column of \code{.design_x} corresponding to the intercept should be a
-#' column of 1s.
-#'
-#' @param .sch_weight Numeric matrix with dimensions n x h (where n is the
-#' number of persons and h is the maximum number of schools attended by any
-#' person in the dataset). Rows should sum to 1 (that is, for each student,
-#' the weights assigned to their schools attended should sum to 1). For a school
-#' a student did not attend, the weight should be 0 (that is, if the maximum
-#' number of schools attended was 2 and person A only attended 1 school, then
-#' the weight for their "second school" should be 0, while the weight for
-#' their "first school" should be 1). To simulate the data, all students were
-#' initially assigned a mobility profile (meaning that all students were
-#' assigned h schools to attend), and then only a certain proportion of
-#' students were coded as mobile. For the students who were coded as mobile,
-#' their \code{.sch_weight} matrix row should give equal weight to all schools
-#' attended. For students who were coded as non-mobile, their first school
-#' was given a weight of 1 and all other schools were given weights of 0.
-#'
-#' @param .sch_resid Numeric matrix with dimensions n x h (where n is the number
-#' of persons and h is the maximum number of schools attended by any person
-#' in the dataset). The hth column of the matrix should give the residual for
-#' the hth school attended by person i. As mentioned above, all students were
-#' initially assigned a mobility profile that included multiple schools, then
-#' only a certain proportion of those mobility profiles were retained.
-#'
-#' @param .per_resid Numeric vector with length n (where n is the number of
-#' persons in the data). Gives the person-level residual for the model.
-#'
-#' @inheritParams pivot_longer_multicol
+#' @inheritParams corclus_params
 #'
 #' @return This function returns a vector of length n (where n is the number
 #' of persons in the dataset) of y values calculated based on the population

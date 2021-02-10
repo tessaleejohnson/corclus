@@ -4,16 +4,15 @@
 \alias{build_mm_list}
 \title{build_mm_list}
 \usage{
-build_mm_list(
-  .mm_ids = paste0("ids_", seq_len(.n_sch)),
-  .mm_wts = paste0("wts_", seq_len(.n_sch))
-)
+build_mm_list(.n_clusters, .mm_id_nms = "ids", .mm_wt_nms = "wts")
 }
 \arguments{
-\item{.mm_ids}{A character vector. The names of the multiple membership
+\item{.n_clusters}{Numeric scalar. The number of clusters in the data.}
+
+\item{.mm_id_nms}{A string. The prefix name of the multiple membership
 unique ID variables.}
 
-\item{.mm_wts}{A character vector. The names of the multiple membership
+\item{.mm_wt_nms}{A string. The prefix name of the multiple membership
 weight variables.}
 }
 \value{

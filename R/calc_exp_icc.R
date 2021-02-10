@@ -9,7 +9,7 @@
 
 #' calc_exp_icc
 #'
-#' @inheritParams generate_data
+#' @inheritParams corclus_params
 #'
 #' @return A numeric scalar.
 #' @export

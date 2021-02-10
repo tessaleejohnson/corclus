@@ -9,8 +9,7 @@ extract_estimates(.mod, .mcmc_nchains = 1)
 \arguments{
 \item{.mod}{A model object produced by \code{\link[R2MLwiN]{runMLwiN}}.}
 
-\item{.mcmc_nchains}{Numeric. The number of chains \code{.mod} used.
-Defaults to 1.}
+\item{.mcmc_nchains}{Numeric. The number of chains \code{.mod} used.}
 }
 \value{
 Returns a tidy table of parameter estimates, including the mean

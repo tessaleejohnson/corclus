@@ -26,28 +26,9 @@
 #' need to be updated if it is desired that students could attend more than
 #' 2 schools.
 #'
-#' @param .sch_exp A matrix or dataframe. The school-level information created
-#' by the \code{\link{gen_u_mmrem}} function and expanded by the
-#' \code{\link{expand_sch_info}} function.
-#'
-#' @param .wt_vec A numeric vector with length equal to the maximum number
-#' of schools attended by students in the data (in this simulation, the
-#' maximum number is 2). The values in \code{.wt_vec} are used to weight
-#' the effects of different schools attended on students. For this study,
-#' all mobile students must have the same weights. If different weighting
-#' patterns are desired, the code will need to be updated. Defaults to
-#' \code{.wt_vec = rep(0.5, 2)}.
-#'
-#' @param .wt_nonmob Logical. Indicates whether non-mobile students should
-#' receive the same weights as mobile students. Technically, it shouldn't
-#' matter if non-mobile students are given the same weights because their
-#' first and second schools are the same, so all weighting schemes should
-#' be equivalent, but it may matter for passing data to MLwiN for estimation.
-#' See \code{\link[R2MLwiN]{runMLwiN}} for more information.
-#'
 #' @param ... Other parameters passed to \code{\link{simulate_mobility}}.
 #'
-#' @inheritParams gen_z_varcov
+#' @inheritParams corclus_params
 #'
 #' @return This function returns a dataframe with a number of columns equal to
 #' \code{NCOL(.sch_exp) * 2 + 3}. The columns from \code{.sch_exp} are repeated

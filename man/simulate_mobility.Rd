@@ -9,7 +9,6 @@ simulate_mobility(
   .max_dist = 1,
   .p_success = 0.5,
   .mob_option = c("center", "np"),
-  .seedling = NULL,
   .pct_mobile = 0.2,
   .pop_size = 250000L,
   .output_details = FALSE
@@ -39,9 +38,6 @@ expected value of success is n * p). Those with higher successes will be
 sent to schools farther away. To determine if schools are above or below the
 current home school, draws will be randomly and uniformly multiplied by
 -1 or 1.}
-
-\item{.seedling}{A numeric scalar. Gives the seed for random number
-generation. Defaults to NULL.}
 
 \item{.pct_mobile}{A numeric scalar between 0 and 1. Gives the proportion of
 mobile students to be saved in the "center" option of

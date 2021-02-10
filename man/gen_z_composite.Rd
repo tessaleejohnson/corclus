@@ -7,8 +7,6 @@
 gen_z_composite(.dat, .sch_weight, .sch_predictor)
 }
 \arguments{
-\item{.dat}{A dataframe containing the data to be pivoted.}
-
 \item{.sch_weight}{Numeric matrix with dimensions n x h (where n is the
 number of persons and h is the maximum number of schools attended by any
 person in the dataset). Rows should sum to 1 (that is, for each student,

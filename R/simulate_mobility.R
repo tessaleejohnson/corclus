@@ -32,9 +32,6 @@
 #' current home school, draws will be randomly and uniformly multiplied by
 #' -1 or 1.
 #'
-#' @param .seedling A numeric scalar. Gives the seed for random number
-#' generation. Defaults to NULL.
-#'
 #' @param .pct_mobile A numeric scalar between 0 and 1. Gives the proportion of
 #' mobile students to be saved in the "center" option of
 #' \code{.mob_option}.
@@ -70,16 +67,12 @@ simulate_mobility <-
     .max_dist = 1,
     .p_success = 0.5,
     .mob_option = c("center", "np"),
-    .seedling = NULL,
     .pct_mobile = 0.2,
     .pop_size = 250000L,
     .output_details = FALSE
   ) {
 
     ##--setup--##
-
-    # set the random number seed
-    set.seed(.seedling)
 
     # match the .mob_option argument to the choice option, where
     # "center" is option 1 and "np", representing n * p, for the expected value
@@ -157,8 +150,7 @@ simulate_mobility <-
             pct_mobile = .pct_mobile,
             draws = x,
             n_trials = n_trials,
-            p_success = .p_success,
-            seed = .seedling
+            p_success = .p_success
           )
       } else {
         sim_details <- NULL
@@ -221,8 +213,7 @@ simulate_mobility <-
             mob_switch = mob_switch,
             draws = x,
             n_trials = n_trials,
-            p_success = .p_success,
-            seed = .seedling
+            p_success = .p_success
           )
       } else {
         sim_details <- NULL

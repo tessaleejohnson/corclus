@@ -9,19 +9,7 @@
 
 #' gen_xr_rnorm
 #'
-#' @param .mean_x Numeric scalar. The mean of the predictor, x. Defaults to 5.
-#'
-#' @param .var_x Numeric scalar. The variance of the predictor, x. Defaults to
-#' 4.
-#'
-#' @param .mean_r Numeric scalar. The mean of the person-level residual, r.
-#' Defaults to 0.
-#'
-#' @param .var_r Numeric scalar. The variance of the person-level residual, r.
-#' Defaults to 2.
-#'
-#' @inheritParams expand_sch
-#' @inheritParams simulate_mobility
+#' @inheritParams corclus_params
 #'
 #' @return This function returns a dataframe with two columns,
 #' \code{x_predictor} and \code{r_residual}. The predictor, x, is a person-level
@@ -43,14 +31,10 @@ gen_xr_rnorm <-
     .mean_x,
     .var_x,
     .mean_r,
-    .var_r,
-    .seedling = NULL
+    .var_r
   ) {
 
     ##--setup--##
-
-    # set seed for random number generation
-    set.seed(.seedling)
 
     # define fixed values
     n_obs <- .n_stu * .n_sch

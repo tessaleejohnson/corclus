@@ -15,14 +15,7 @@
 #' are \code{.n_stu} per school and \code{.n_sch}, the final output should have
 #' \code{.n_stu * .n_sch} rows.
 #'
-#' @param .sch_dat A matrix or dataframe. The school-level information created
-#' by the \code{\link{gen_u_mmrem}} function.
-#'
-#' @param .n_stu A numeric scalar. The number of students attending each
-#' school. Note: this is not the total number of students in the dataset,
-#' merely the number of students per school.
-#'
-#' @inheritParams gen_z_varcov
+#' @inheritParams corclus_params
 #'
 #' @return This function returns a dataframe with a number of rows equal to
 #' \code{.n_stu * .n_sch}. The columns of the input data (\code{.sch_dat}) are

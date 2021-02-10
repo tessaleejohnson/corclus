@@ -8,7 +8,7 @@
 
 #' calc_exp_l2var
 #'
-#' @inheritParams generate_data
+#' @inheritParams corclus_params
 #'
 #' @return A numeric scalar.
 #' @export

@@ -16,7 +16,7 @@ variance of all schools' predictors, z. If present, the second element gives
 the covariance of z between schools k and k + 1. The values given in
 \code{.clust_cov} apply to all schools (that is, similar to a Toeplitz
 pattern). Any off-diagonal values (i.e., covariances) not specified will
-default to 0. The main diagonal (i.e., predictor variance) defaults to 0.8.}
+default to 0. The main diagonal is the variance explained by the predictor.}
 }
 \value{
 This function returns a matrix of dimensions \code{.n_sch x .n_sch},

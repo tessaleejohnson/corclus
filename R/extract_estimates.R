@@ -16,7 +16,6 @@
 #' @param .mod A model object produced by \code{\link[R2MLwiN]{runMLwiN}}.
 #'
 #' @param .mcmc_nchains Numeric. The number of chains \code{.mod} used.
-#' Defaults to 1.
 #'
 #' @return Returns a tidy table of parameter estimates, including the mean
 #' and standard deviation of the saved draws, the 95 percent credible

@@ -20,8 +20,7 @@ of schools attended by students in the data (in this simulation, the
 maximum number is 2). The values in \code{.wt_vec} are used to weight
 the effects of different schools attended on students. For this study,
 all mobile students must have the same weights. If different weighting
-patterns are desired, the code will need to be updated. Defaults to
-\code{.wt_vec = rep(0.5, 2)}.}
+patterns are desired, the code will need to be updated.}
 
 \item{.wt_nonmob}{Logical. Indicates whether non-mobile students should
 receive the same weights as mobile students. Technically, it shouldn't

@@ -7,10 +7,12 @@
 
 #' build_mm_list
 #'
-#' @param .mm_ids A character vector. The names of the multiple membership
+#' @param .n_clusters Numeric scalar. The number of clusters in the data.
+#'
+#' @param .mm_id_nms A string. The prefix name of the multiple membership
 #' unique ID variables.
 #'
-#' @param .mm_wts A character vector. The names of the multiple membership
+#' @param .mm_wt_nms A string. The prefix name of the multiple membership
 #' weight variables.
 #'
 #' @return This function returns a list to be passed to \code{run_mlwin}.
@@ -20,9 +22,14 @@
 #' }
 build_mm_list <-
   function(
-    .mm_ids = paste0("ids_", seq_len(.n_sch)),
-    .mm_wts = paste0("wts_", seq_len(.n_sch))
+    .n_clusters,
+    .mm_id_nms = "ids",
+    .mm_wt_nms = "wts"
   ) {
+
+    ##--setup--##
+    .mm_ids <- paste0(.mm_id_nms, seq_len(.n_clusters))
+    .mm_wts <- paste0(.mm_wt_nms, seq_len(.n_clusters))
 
     ##--list multiple membership ids--##
     id_list <- as.list(.mm_ids)

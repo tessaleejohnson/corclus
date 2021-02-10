@@ -24,16 +24,7 @@
 #' by the predictor out of the total school-level variance will be equal to
 #' \code{.clust_cov[1] / (residual variance + .clust_cov[1])}.
 #'
-#' @param .n_sch Numeric scalar. Gives the total number of schools in the
-#' dataset. The variance-covariance matrix for predictor z will have dimensions
-#' \code{.n_sch x .n_sch}.
-#'
-#' @param .clust_cov Numeric vector. The first element of the vector gives the
-#' variance of all schools' predictors, z. If present, the second element gives
-#' the covariance of z between schools k and k + 1. The values given in
-#' \code{.clust_cov} apply to all schools (that is, similar to a Toeplitz
-#' pattern). Any off-diagonal values (i.e., covariances) not specified will
-#' default to 0. The main diagonal (i.e., predictor variance) defaults to 0.8.
+#' @inheritParams corclus_params
 #'
 #' @return This function returns a matrix of dimensions \code{.n_sch x .n_sch},
 #' the variance-covariance matrix for a school-level predictor, z. This matrix

@@ -13,10 +13,7 @@
 #' of predictor values \code{.sch_predictor} and constructs the weighted
 #' sum as \eqn{diag(.sch_weight %*% t(.sch_predictor))}.
 #'
-#' @param .sch_predictor Numeric matrix or dataframe. Contains the values of
-#' the school-level predictor, z, generated in \code{\link{gen_u_mmrem}}.
-#'
-#' @inheritParams gen_y_mmrem
+#' @inheritParams corclus_params
 #'
 #' @return This function returns a numeric vector of length equal to
 #' \code{NROW(.sch_weight)} (or, equivalently, \code{NROW(.sch_predictor)}).

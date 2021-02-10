@@ -4,7 +4,7 @@
 \alias{gen_u_mmrem}
 \title{gen_u_mmrem}
 \usage{
-gen_u_mmrem(.n_sch, .u_resid_var, .clust_cov, .gamma_z, .seedling = NULL)
+gen_u_mmrem(.n_sch, .u_resid_var, .clust_cov, .gamma_z)
 }
 \arguments{
 \item{.n_sch}{Numeric scalar. Gives the total number of schools in the
@@ -13,20 +13,17 @@ dataset. The variance-covariance matrix for predictor z will have dimensions
 
 \item{.u_resid_var}{Numeric scalar. Gives the residual variance of u0j (i.e.,
 the variance unexplained after controlling for the school-level predictor,
-z). Defaults to 0.2.}
+z).}
 
 \item{.clust_cov}{Numeric vector. The first element of the vector gives the
 variance of all schools' predictors, z. If present, the second element gives
 the covariance of z between schools k and k + 1. The values given in
 \code{.clust_cov} apply to all schools (that is, similar to a Toeplitz
 pattern). Any off-diagonal values (i.e., covariances) not specified will
-default to 0. The main diagonal (i.e., predictor variance) defaults to 0.8.}
+default to 0. The main diagonal is the variance explained by the predictor.}
 
 \item{.gamma_z}{Numeric scalar. The school-level effect of the
 \code{z_predictors} on the random intercept.}
-
-\item{.seedling}{A numeric scalar. Gives the seed for random number
-generation. Defaults to NULL.}
 }
 \value{
 This function returns a dataframe with four elements: "sch_id",

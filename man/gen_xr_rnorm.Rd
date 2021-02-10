@@ -4,15 +4,7 @@
 \alias{gen_xr_rnorm}
 \title{gen_xr_rnorm}
 \usage{
-gen_xr_rnorm(
-  .n_stu,
-  .n_sch,
-  .mean_x,
-  .var_x,
-  .mean_r,
-  .var_r,
-  .seedling = NULL
-)
+gen_xr_rnorm(.n_stu, .n_sch, .mean_x, .var_x, .mean_r, .var_r)
 }
 \arguments{
 \item{.n_stu}{A numeric scalar. The number of students attending each
@@ -23,19 +15,13 @@ merely the number of students per school.}
 dataset. The variance-covariance matrix for predictor z will have dimensions
 \code{.n_sch x .n_sch}.}
 
-\item{.mean_x}{Numeric scalar. The mean of the predictor, x. Defaults to 5.}
+\item{.mean_x}{Numeric scalar. The mean of the predictor, x.}
 
-\item{.var_x}{Numeric scalar. The variance of the predictor, x. Defaults to
-4.}
+\item{.var_x}{Numeric scalar. The variance of the predictor, x.}
 
-\item{.mean_r}{Numeric scalar. The mean of the person-level residual, r.
-Defaults to 0.}
+\item{.mean_r}{Numeric scalar. The mean of the person-level residual, r.}
 
-\item{.var_r}{Numeric scalar. The variance of the person-level residual, r.
-Defaults to 2.}
-
-\item{.seedling}{A numeric scalar. Gives the seed for random number
-generation. Defaults to NULL.}
+\item{.var_r}{Numeric scalar. The variance of the person-level residual, r.}
 }
 \value{
 This function returns a dataframe with two columns,

@@ -7,8 +7,6 @@
 gen_y_mmrem(.dat, .x_predictor, .sch_weight, .sch_resid, .per_resid, .gamma_x)
 }
 \arguments{
-\item{.dat}{A dataframe containing the data to be pivoted.}
-
 \item{.x_predictor}{Numeric matrix with dimensions n x p (where n is the num
 of persons and p is the number of coefficients, including the intercept).
 The column of \code{.design_x} corresponding to the intercept should be a

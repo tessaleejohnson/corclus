@@ -15,10 +15,7 @@
 #' of the capture group requested by \code{.tag_group} based on a regex
 #' given by \code{.capture_groups}.
 #'
-#' @param .strings A character vector. Gives the strings to be extracted by
-#' \code{.capture_groups}.
-#'
-#' @inheritParams pivot_longer_multicol
+#' @inheritParams corclus_params
 #'
 #' @return This function returns a character vector that is the result of
 #' matching the input \code{.strings} against the regex \code{.capture_groups},

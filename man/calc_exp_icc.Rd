@@ -16,19 +16,33 @@ calc_exp_icc(
 )
 }
 \arguments{
-\item{.pct_mobile}{A numeric scalar between 0 and 1. Gives the proportion of
-mobile students to be saved in the "center" option of
-\code{.mob_option}.}
-
 \item{.clust_cov}{Numeric vector. The first element of the vector gives the
 variance of all schools' predictors, z. If present, the second element gives
 the covariance of z between schools k and k + 1. The values given in
 \code{.clust_cov} apply to all schools (that is, similar to a Toeplitz
 pattern). Any off-diagonal values (i.e., covariances) not specified will
-default to 0. The main diagonal (i.e., predictor variance) defaults to 0.8.}
+default to 0. The main diagonal is the variance explained by the predictor.}
+
+\item{.wt_vec}{A numeric vector with length equal to the maximum number
+of schools attended by students in the data (in this simulation, the
+maximum number is 2). The values in \code{.wt_vec} are used to weight
+the effects of different schools attended on students. For this study,
+all mobile students must have the same weights. If different weighting
+patterns are desired, the code will need to be updated.}
+
+\item{.u_resid_var}{Numeric scalar. Gives the residual variance of u0j (i.e.,
+the variance unexplained after controlling for the school-level predictor,
+z).}
+
+\item{.gamma_z}{Numeric scalar. The school-level effect of the
+\code{z_predictors} on the random intercept.}
 
 \item{.gamma_x}{Numeric vector with length p (where p is the number of model
 coefficients, including the intercept).}
+
+\item{.var_x}{Numeric scalar. The variance of the predictor, x.}
+
+\item{.var_r}{Numeric scalar. The variance of the person-level residual, r.}
 }
 \value{
 A numeric scalar.

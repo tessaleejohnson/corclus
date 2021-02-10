@@ -18,18 +18,13 @@
 
 #' generate_data
 #'
-#' This function
-#'
-#' @param .seed_start Numeric scalar. The starting seed value. Each function
-#' in this script that uses random number generation will take this starting
-#' seed and add some noise to it. Defaults to NULL.
+#' This function generates data according to the multiple membership
+#' random effects model with correlated clusters given by the
+#' variance-covariance matrix specified in \code{\link{gen_z_varcov}}.
 #'
 #' @param ... Other parameters passed to \code{\link{assign_mobility}}.
 #'
-#' @inheritParams gen_z_varcov
-#' @inheritParams expand_sch
-#' @inheritParams gen_y_mmrem
-#' @inheritParams simulate_mobility
+#' @inheritParams corclus_params
 #'
 #' @return This function returns data generated under the correlated cluster
 #' multiple membership model, with correlated clusters defined by the
@@ -65,8 +60,7 @@
 #'   .mean_r = 0,
 #'   .var_r = 2,
 #'   .gamma_z = 0,
-#'   .gamma_x = c(10, x1beta),
-#'   .seed_start = 1
+#'   .gamma_x = c(10, x1beta)
 #' )
 #'
 #' }
@@ -75,7 +69,7 @@ generate_data <-
     .n_sch = 5,
     .n_stu = 5,
     .u_resid_var = 0.2,
-    .clust_cov = c(.8, 1),
+    .clust_cov = 0.8,
     .wt_vec = c(0.5, 0.5),
     .pct_mobile = 0,
     .mean_x = 5,
@@ -84,7 +78,6 @@ generate_data <-
     .var_r = 2,
     .gamma_z = 0,
     .gamma_x = c(10, sqrt(17)/2),
-    .seed_start = NULL,
     ...
   ) {
 
@@ -92,7 +85,6 @@ generate_data <-
 
     sch_inf <-
       gen_u_mmrem(
-        .seedling = .seed_start + 68,
         .n_sch = .n_sch,
         .u_resid_var = .u_resid_var,
         .clust_cov = .clust_cov,
@@ -101,7 +93,6 @@ generate_data <-
       expand_sch(., .n_sch = .n_sch, .n_stu = .n_stu) %>%
       assign_mobility(
         .sch_exp = .,
-        .seedling = .seed_start + 41,
         .n_sch = .n_sch,
         .wt_vec = .wt_vec,
         .wt_nonmob = FALSE,
@@ -188,7 +179,6 @@ generate_data <-
       dplyr::mutate(
         .data = .,
         gen_xr_rnorm(
-          .seedling = .seed_start + 419,
           .n_stu = .n_stu,
           .n_sch = .n_sch,
           .mean_x = .mean_x,

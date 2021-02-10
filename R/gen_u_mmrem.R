@@ -28,15 +28,7 @@
 #' avoid this. In testing, it seems that 5000 works slowly, 10000 is very slow,
 #' and any more than that brings things to a complete halt.
 #'
-#' @param .u_resid_var Numeric scalar. Gives the residual variance of u0j (i.e.,
-#' the variance unexplained after controlling for the school-level predictor,
-#' z). Defaults to 0.2.
-#'
-#' @param .gamma_z Numeric scalar. The school-level effect of the
-#' \code{z_predictors} on the random intercept.
-#'
-#' @inheritParams gen_z_varcov
-#' @inheritParams simulate_mobility
+#' @inheritParams corclus_params
 #'
 #' @return This function returns a dataframe with four elements: "sch_id",
 #' the ID variable (equal to \code{seq_len(.n_sch)}); "u_residual", the random
@@ -72,14 +64,10 @@ gen_u_mmrem <-
     .n_sch,
     .u_resid_var,
     .clust_cov,
-    .gamma_z,
-    .seedling = NULL
+    .gamma_z
   ) {
 
     ##--setup--##
-
-    # set seed for random data generation
-    set.seed(.seedling)
 
     # create an ID for the u0j school random intercept residual
     id <- seq_len(.n_sch)

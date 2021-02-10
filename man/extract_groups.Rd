@@ -9,21 +9,6 @@ extract_groups(.strings, .capture_groups = "(.+)_(.+)", .tag_group = 2)
 \arguments{
 \item{.strings}{A character vector. Gives the strings to be extracted by
 \code{.capture_groups}.}
-
-\item{.capture_groups}{A string containing a regular expression defining
-two capture groups, one capturing the name of the variable to be saved and
-one group capturing the commonly formatted "tag" of the variables. Defaults
-to \code{"(.+)_(.+)"}, which splits the variable names at the last "\emph{"
-character present in the variable name (the final "}" is removed).}
-
-\item{.tag_group}{Numeric scalar. Indicates the capture group (as defined
-by the regular expression in \code{.capture_groups}) that contains the
-commonly formatted "tag". Defaults to 2 (e.g., "sch_1" contains the tag in
-the second group, while "t1_sch" contains a tag in the first). The tags will
-eventually be passed to a variable (named by \code{.tag_name}), so it is
-helpful if the tags are meaningful. For example, for variables
-"sch_1" and "sch_2", a new variable will be created that will take values of
-"1" and "2".}
 }
 \value{
 This function returns a character vector that is the result of
