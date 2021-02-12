@@ -17,6 +17,7 @@ generate_data(
   .var_r = 2,
   .gamma_z = 0,
   .gamma_x = c(10, sqrt(17)/2),
+  .mm_format = c("compact", "wide"),
   ...
 )
 }

@@ -57,6 +57,7 @@ assign_mobility <-
     .n_sch,
     .wt_vec,
     .wt_nonmob = FALSE,
+    .id_nonmob = FALSE,
     ...
   ) {
 
@@ -97,7 +98,7 @@ assign_mobility <-
     # how MLwiN works)
     weight_assign <-
       data.frame(
-        matrix(.wt_vec, nrow = n_row, ncol = length(.wt_vec))
+        matrix(.wt_vec, nrow = n_row, ncol = length(.wt_vec), byrow = TRUE)
       )
 
     names(weight_assign) <- c("sch_wt_1", "sch_wt_2")
@@ -115,13 +116,13 @@ assign_mobility <-
 
       wt_dat <-
         apply(
-          cbind(weight_assign, mob_assign),
+          cbind(mob_assign, weight_assign),
           MARGIN = 1,
           FUN = function(x) {
-            if (x[3] == 0) {
-              x[1:2] <- weights_nonmob
+            if (x[1] == 0) {
+              x[2:length(x)] <- weights_nonmob
             }
-            x[1:2]
+            x[2:length(x)]
           }
         ) %>%
         t(.) %>%
@@ -189,6 +190,30 @@ assign_mobility <-
       mobility = mob_assign,
       wt_dat
     )
+
+    # if .id_nonmob = FALSE, replace second school IDs for non-mobile students
+    # with 0s (NOTE: this argument will only have an effect if
+    # .wt_nonmob = FALSE)
+    #
+    # OPTION 1 (.id_nonmob = FALSE) for nonmobile students:
+    # sch_id_1 = X; sch_id_2 = 0;
+    #
+    # OPTION 2 (.id_nonmob = TRUE) for nonmobile students:
+    # sch_id_1 = X; sch_id_2 = X;
+    #
+    # (option 2 is already prepped; option 1 requires new action)
+
+    if (!.id_nonmob) {
+      sch_mob <-
+        sch_mob %>%
+        dplyr::mutate(
+          sch_id_2 = dplyr::case_when(
+            mobility == 0 ~ 0,
+            TRUE ~ as.numeric(sch_id_2)
+          )
+        )
+    }
+
 
 
     ##--output--##

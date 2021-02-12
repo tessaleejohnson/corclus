@@ -37,9 +37,9 @@
 #' @param .values_fill A scalar. Indicates the value that should be filled in
 #' when values are missing. Defaults to 0.
 #'
-#' @param .collapse_fun A function. Identifies the function to be used to
-#' collapse over rows during \code{\link[dplyr]{group_by}} and
-#' \code{\link[dplyr]{summarise}}. Defaults to \code{sum}.
+#' @param .aggregator_fun A function. Identifies the function to be used to
+#' aggregate over rows during \code{\link[dplyr]{group_by}} and
+#' \code{\link[dplyr]{summarise}}. Defaults to \code{\link{combine_vals}}.
 #'
 #' @param ... Other parameters passed to \code{\link{pivot_longer_multicol}}.
 #'
@@ -87,9 +87,11 @@ pivot_wider_multicol <-
     .wider_prefix = "wts_",
     .tag_name = "time",
     .values_fill = 0,
-    .collapse_fun = sum,
+    .aggregator_fun = combine_vals,
     ...
   ) {
+
+    ##--setup--##
 
 
     ##--pivot--##
@@ -177,7 +179,7 @@ pivot_wider_multicol <-
         .data = .,
         dplyr::across(
           .cols = tidyr::matches(.wider_prefix),
-          .fns = .collapse_fun,
+          .fns = .aggregator_fun,
           .names = "{.col}"
         )
       )
@@ -186,4 +188,49 @@ pivot_wider_multicol <-
     .out_dat
 
 
+  }
+
+
+
+#' combine_vals
+#'
+#' Helper function for pivoting wide & then summarizing/aggregating in the
+#' \code{\link{pivot_wider_multicol}} steps. \code{\link{combine_vals}}
+#' aggregates using \code{\link[base]{sum}} with the key alteration that
+#' \code{na.rm = TRUE}.
+#'
+#' @param ... Values passed to the internal aggregator functions.
+#'
+#' @seealso \code{\link{collapse_vals}}
+combine_vals <-
+  function(...) {
+    sum(..., na.rm = TRUE)
+  }
+
+#' collapse_vals
+#'
+#' Helper function for pivoting wide & then summarizing/aggregating in the
+#' \code{\link{pivot_wider_multicol}} steps. \code{\link{collapse_vals}}
+#' aggregates using \code{\link[base]{unique}}, then removing unwanted values.
+#' If the exclusion procedure results in no values being retained, the original
+#' values are passed to \code{\link{combine_vals}}.
+#'
+#' @param ... Values passed to the internal aggregator functions.
+#'
+#' @seealso \code{\link{combine_vals}}
+collapse_vals <-
+  function(..., .exclude_val = 0) {
+    x_unique <- unique(...)
+
+    if (!is.na(.exclude_val)) {
+      x_exclude <- x_unique[x_unique != .exclude_val]
+    } else {
+      x_exclude <- x_unique[is.na(x_unique)]
+    }
+
+    if (length(x_exclude) == 0) {
+      combine_vals(...)
+    } else {
+      x_exclude
+    }
   }

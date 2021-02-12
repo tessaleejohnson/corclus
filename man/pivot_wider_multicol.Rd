@@ -13,7 +13,7 @@ pivot_wider_multicol(
   .wider_prefix = "wts_",
   .tag_name = "time",
   .values_fill = 0,
-  .collapse_fun = sum,
+  .aggregator_fun = combine_vals,
   ...
 )
 }
@@ -48,9 +48,9 @@ defaults to "time".}
 \item{.values_fill}{A scalar. Indicates the value that should be filled in
 when values are missing. Defaults to 0.}
 
-\item{.collapse_fun}{A function. Identifies the function to be used to
-collapse over rows during \code{\link[dplyr]{group_by}} and
-\code{\link[dplyr]{summarise}}. Defaults to \code{sum}.}
+\item{.aggregator_fun}{A function. Identifies the function to be used to
+aggregate over rows during \code{\link[dplyr]{group_by}} and
+\code{\link[dplyr]{summarise}}. Defaults to \code{\link{combine_vals}}.}
 
 \item{...}{Other parameters passed to \code{\link{pivot_longer_multicol}}.}
 }

@@ -100,7 +100,7 @@ write_formula <-
 
     if (!is.null(level3_id1)) {
       level3_specs <- glue::glue({'
-        + (1 {random_l3_specs}| {level3_id1})
+        (1 {random_l3_specs}| {level3_id1}) +
         '})
     } else {
       level3_specs <- ""
@@ -111,11 +111,12 @@ write_formula <-
     formula_string <- glue::glue({'
       {response_var} ~ {intercept_specs}
         {predictor_specs}
-        (1 {random_l1_specs}| {level1_id}) +
-        (1 {random_l2_specs}| {level2_id1}) {level3_specs}
+        {level3_specs}
+        (1 {random_l2_specs}| {level2_id1}) +
+        (1 {random_l1_specs}| {level1_id})
       '})
 
     ##--export string as formula--##
-    #formula_string
     as.formula(formula_string)
+
   }

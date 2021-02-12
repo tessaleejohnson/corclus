@@ -78,8 +78,13 @@ generate_data <-
     .var_r = 2,
     .gamma_z = 0,
     .gamma_x = c(10, sqrt(17)/2),
+    .mm_format = c("compact", "wide"),
     ...
   ) {
+
+    ##--setup--##
+    .mm_format <- match.arg(.mm_format, choices = c("compact", "wide"))
+
 
     ##--generate school information:
 
@@ -96,6 +101,7 @@ generate_data <-
         .n_sch = .n_sch,
         .wt_vec = .wt_vec,
         .wt_nonmob = FALSE,
+        .id_nonmob = FALSE,
         .pct_mobile = .pct_mobile,
         ...
       )
@@ -104,27 +110,7 @@ generate_data <-
 
     # 1. add a student identifier, stu_id
     # 2. create a 1/0 coded is_mobile var
-    # 3. add expanded sch_wts (wts), sch_ids (ids), & sch_res (ures)
-
-
-    # helper functions for pivoting wide & then summarizing in the
-    # pivot_wider_multicol steps
-    combine_vals <-
-      function(...) {
-        sum(..., na.rm = TRUE)
-      }
-
-    collapse_vals <-
-      function(...) {
-        x_unique <- unique(...)
-        x_narm <- x_unique[x_unique != 0]
-
-        if (length(x_narm) == 0) {
-          combine_vals(x_narm)
-        } else {
-          x_narm
-        }
-      }
+    # 3. if .mm_format is "wide", add expanded sch_wts (wts) to the dataset
 
     # expand the school information
     sch_wider <-
@@ -138,32 +124,32 @@ generate_data <-
           is.na(mobility) ~ NA_real_,
           TRUE ~ 1
         )
-      ) %>%
-      dplyr::mutate(
-        .data = .,
-        # expand weights, one column per id
-        pivot_wider_multicol(
-          .dat = .,
-          tidyr::matches("stu"),
-          tidyr::matches("sch"),
-          .wider_names = tidyr::matches("sch_id"),
-          .wider_values = tidyr::matches("sch_wt"),
-          .wider_prefix = "wts_",
-          .values_fill = 0,
-          .collapse_fun = ~sum(.x, na.rm = TRUE)
-        ),
-        # expand ids, one column per id
-        pivot_wider_multicol(
-          .dat = .,
-          tidyr::matches("stu"),
-          tidyr::matches("sch_id"),
-          .wider_names = tidyr::matches("sch_id"),
-          .wider_values = tidyr::matches("sch_id"),
-          .wider_prefix = "ids_",
-          .values_fill = 0,
-          .collapse_fun = collapse_vals
-        )
       )
+
+
+    # if the multiple membership format is selected as "wide", create
+    # one weight variable per multiple membership unit filled with the
+    # unit's weight for each student
+    if (.mm_format == "wide") {
+
+      sch_wider <-
+        sch_wider %>%
+        dplyr::mutate(
+          .data = .,
+          # expand weights, one column per id
+          pivot_wider_multicol(
+            .dat = .,
+            tidyr::matches("stu"),
+            tidyr::matches("sch"),
+            .wider_names = tidyr::matches("sch_id"),
+            .wider_values = tidyr::matches("sch_wt"),
+            .wider_prefix = "wts_",
+            .values_fill = 0,
+            .aggregator_fun = combine_vals
+          )
+        )
+
+    }
 
 
     ##--generate student information:
@@ -215,8 +201,8 @@ generate_data <-
     ##--data manipulation:
 
     # 1. order data by sch1's id (sch_id_1) and stu_id
-    # 3. organize variable order by type
-    # 4. add a constant term
+    # 2. organize variable order by type
+    # 3. add a constant term
 
     dat_sorted <-
       sch_stu_dat %>%

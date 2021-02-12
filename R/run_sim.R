@@ -58,9 +58,6 @@ run_sim <-
     ...
   ) {
 
-    ##--set timer--##
-    tictoc::tic()
-
     ##--force evaluation of the .sim_args--##
     force(.sim_args)
 
@@ -86,7 +83,5 @@ run_sim <-
     ##--output a list of result and the simulation condition--##
     list(result = result, condition = .sim_args)
 
-    ##--close timer--##
-    tictoc::toc()
-
   }
+

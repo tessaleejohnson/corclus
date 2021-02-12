@@ -74,10 +74,10 @@
     },
     "RcppArmadillo": {
       "Package": "RcppArmadillo",
-      "Version": "0.10.1.2.2",
+      "Version": "0.10.2.1.0",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "c66578fcae4cd6f42bddffee8a67f19b"
+      "Hash": "a2de53472129933a29975e7cfa3ffe28"
     },
     "askpass": {
       "Package": "askpass",

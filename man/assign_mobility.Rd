@@ -4,7 +4,14 @@
 \alias{assign_mobility}
 \title{assign_mobility}
 \usage{
-assign_mobility(.sch_exp, .n_sch, .wt_vec, .wt_nonmob = FALSE, ...)
+assign_mobility(
+  .sch_exp,
+  .n_sch,
+  .wt_vec,
+  .wt_nonmob = FALSE,
+  .id_nonmob = FALSE,
+  ...
+)
 }
 \arguments{
 \item{.sch_exp}{A matrix or dataframe. The school-level information created
@@ -26,6 +33,13 @@ patterns are desired, the code will need to be updated.}
 receive the same weights as mobile students. Technically, it shouldn't
 matter if non-mobile students are given the same weights because their
 first and second schools are the same, so all weighting schemes should
+be equivalent, but it may matter for passing data to MLwiN for estimation.
+See \code{\link[R2MLwiN]{runMLwiN}} for more information.}
+
+\item{.id_nonmob}{Logical. Indicates whether non-mobile students should
+receive a non-zero school ID for their second school. Technically, it
+shouldn't matter if non-mobile students have a non-zero school ID (i.e., if
+first and second schools are the same), so all ID schemes should
 be equivalent, but it may matter for passing data to MLwiN for estimation.
 See \code{\link[R2MLwiN]{runMLwiN}} for more information.}
 

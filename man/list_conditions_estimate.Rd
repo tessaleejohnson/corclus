@@ -10,9 +10,9 @@ list_conditions_estimate(
     "z_composite")), function(v) write_formula(predictor_var = v)),
   .outcome_dist = "Normal",
   .mcmc_burn = 500,
-  .mcmc_iter = 2500,
+  .mcmc_iter = 5000,
   .mcmc_nchains = 1,
-  .mm_list = list(HLM = NA, MMREM = build_mm_list(.n_clusters = 5))
+  .mm_list = list(HLM = NA, MMREM = build_mm_list(.n_clust = 2))
 )
 }
 \arguments{
@@ -47,6 +47,15 @@ NOTE: All arguments that take objects with length > 1 must
 wrap those objects in a list.
 Bad: \code{list_conditions_datagen(.clust_cov = c(0.8, 0))}.
 Good: \code{list_conditions_datagen(.clust_cov = list(c(0.8, 0)))}.
+
+Bad: \code{list_conditions_estimate(.dat = generate_data())}.
+Good: \code{list_conditions_estimate(.dat = list(generate_data()))}.
+
+The same applies to the \code{.model_formula} and \code{.mm_list} args,
+even when only "one" condition is present. (That is, a single formula
+with both a LHS and a RHS has length 3: "~", "LHS" and "RHS"; similarly,
+for one multiple membership condition, \code{\link{build_mm_list}}
+produces a list with length 2).
 }
 \examples{
 \dontrun{

@@ -20,6 +20,13 @@ coefficients, including the intercept).}
 \item{.gamma_z}{Numeric scalar. The school-level effect of the
 \code{z_predictors} on the random intercept.}
 
+\item{.id_nonmob}{Logical. Indicates whether non-mobile students should
+receive a non-zero school ID for their second school. Technically, it
+shouldn't matter if non-mobile students have a non-zero school ID (i.e., if
+first and second schools are the same), so all ID schemes should
+be equivalent, but it may matter for passing data to MLwiN for estimation.
+See \code{\link[R2MLwiN]{runMLwiN}} for more information.}
+
 \item{.mean_r}{Numeric scalar. The mean of the person-level residual, r.}
 
 \item{.mean_x}{Numeric scalar. The mean of the predictor, x.}
