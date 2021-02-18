@@ -564,10 +564,10 @@
     },
     "memisc": {
       "Package": "memisc",
-      "Version": "0.99.28",
+      "Version": "0.99.29",
       "Source": "Repository",
       "Repository": "CRAN",
-      "Hash": "f6ef4c1b414984f4ff24cc891dea08e2"
+      "Hash": "1c9c9e526e616badc67613e1d0e42026"
     },
     "memoise": {
       "Package": "memoise",

@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Match function</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for re_matches {rex}"><tr><td>re_matches {rex}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Match function</h2>
+
+<h3>Description</h3>
+
+<p>Match function
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+re_matches(
+  data,
+  pattern,
+  global = FALSE,
+  options = NULL,
+  locations = FALSE,
+  ...
+)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>character vector to match against</p>
+</td></tr>
+<tr valign="top"><td><code>pattern</code></td>
+<td>
+<p>regular expression to use for matching</p>
+</td></tr>
+<tr valign="top"><td><code>global</code></td>
+<td>
+<p>use global matching</p>
+</td></tr>
+<tr valign="top"><td><code>options</code></td>
+<td>
+<p>regular expression options</p>
+</td></tr>
+<tr valign="top"><td><code>locations</code></td>
+<td>
+<p>rather than returning the values of the matched (or
+captured) string, return a <code>data.frame</code> of the match locations in the
+string.</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>options passed to regexpr or gregexpr</p>
+</td></tr>
+</table>
+
+
+<h3>Value</h3>
+
+<p>if no captures, returns a logical vector the same length as the
+input character vector specifying if the relevant value matched or not.  If
+there are captures in the regular expression, returns a <code>data.frame</code> with a
+column for each capture group.  If <code>global</code> is <code>TRUE</code>, returns a
+list of <code>data.frame</code>s.
+</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../base/html/regex.html">regexp</a></code> Section &quot;Perl-like Regular Expressions&quot; for a
+discussion of the supported options
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+string &lt;- c("this is a", "test string")
+re_matches(string, rex("test")) # FALSE FALSE
+
+# named capture
+re_matches(string, rex(capture(alphas, name = "first_word"), space,
+  capture(alphas, name = "second_word")))
+#   first_word second_word
+# 1       this          is
+# 2       test      string
+
+# capture returns NA when it fails to match
+re_matches(string, rex(capture("test")))
+#      1
+# 1 test
+# 2 &lt;NA&gt;
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rex</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

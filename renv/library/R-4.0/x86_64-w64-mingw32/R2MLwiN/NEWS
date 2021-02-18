@@ -1,0 +1,567 @@
+Thu Apr 02 2020
+1. Changes
+   * Add initial support for the broom package
+
+Fri Mar 27 2020
+1. Bug fixing
+   * Set graph layout back after plotting in MCMC chapter 4 replication example
+
+Thu Mar 26 2020
+1. Bug fixing
+   * Allow sixway graphs to be displayed correctly in rmarkdown
+
+Thu Feb 27 2020
+1. Changes
+   * Ensure that exported generic methods match the type in their base package
+   * Simplify model output code
+
+Wed Feb 26 2020
+1. Changes
+   * Update @S3method to @exportS3Method to reflect changes in roxygen2 version 7.
+   * Ensure functions called from other packages are prefixed with a namespace
+   * Explicitly check for and load packages used in the demos
+   * Only import functions used from other packages, rather than loading the whole package
+
+Wed Jun 26 2019
+1. Bug fixing
+   * Correct the confidence intervals used in caterpillar plots for some of the examples
+
+Thu Jun 13 2019
+1. Changes
+   * Add checks that user supplied MCMC starting value and informative prior matrices are positive-definite
+
+Wed Jun 12 2019
+1. Bug fixing
+   * Allow "Intercept" to be used in prior specification if the formula contains "1"
+   * Corrected level number in rp<level> part of informative prior specification for multivariate/multinomial models
+   * Added further checks when interpreting the user-supplied informative prior specification
+   * Fix some cases where informative priors could not be applied to multinomial and mixed response models
+
+2. Changes
+   * Recent versions of MLwiN work in double precision, so remove precision reduction in examples
+   * Avoid parsing the formula a second time when applying priors to a model
+
+Tue Jun 11 2019
+1. Bug fixing
+   * Allow non-alphanumeric characters (such as ".") in response variable names for non-normal models
+   * Do not replace "." with "_" within variable names used to generate parameter labels
+   * Update documentation for MCMC information prior specification
+
+Tue Jun 04 2019
+1. Bug fixing
+   * Correct options for running via WinBUGS (as an alternative to OpenBUGS)
+   * BRugs does not provide a way to specify the OpenBUGS path, so update options to reflect this
+
+Mon May 20 2019
+1. Changes
+   * Replace calls to rbugs with R2WinBUGS
+   * Give warning if a necessary package is not installed for a demo, instead of automatically installing it
+
+Tue Feb 12 2019
+1. Changes
+   * Make the rbugs package dependency optional
+
+Mon Feb 11 2019
+1. Changes
+   * Increase minimum suggested version of MLwiN to 2.36
+
+Fri Feb 08 2019
+1. Bug fixing
+   * Warn the user if an expected column is not present in the data
+   * Correct documentation of smat to indicate that is should be a 2xN matrix instead of Nx2
+
+2. Changes
+   * Display citation information directly instead of capturing the print output
+   * Specify UTF-8 encoding in the DESCRIPTION file.
+
+Fri Apr 20 2018
+1. Bug fixing
+   * Correct stored hierarchy information when units IDs do not have unique values across higher levels
+
+Wed Feb 14 2017
+1. Bug fixing
+   * Correct final model in User Guide chapter 11 example to match manual
+
+Thu Sep 21 2017
+1. Bug fixing
+   * Fixed bug where some models with interactions would not run due to generated variables having different names to those expected by the formula
+
+Thu Aug 24 2017
+1. Bug fixing
+   * Fixed bug where parameters could be incorrectly labelled in the random part if the order the variables are entered varies between levels or variables not included at lower levels are specified before those that are
+
+Wed Jul 12 2017
+1. Bug fixing
+   * Fixed bug that caused residual estimates from MCMC to be doubled and requests for standardised residuals to be ignored
+   * Fixed bug preventing multiple membership models with multivariate responses from being correctly set up
+
+Mon Apr 24 2017
+1. Changes
+   * Add option for setting the random number generator used by MLwiN
+
+Fri Nov 04 2016
+1. Bug fixing
+   * Allow runMLwiN function to work with "with" function
+
+Sat Aug 27 2016
+1. Bug fixing
+   * Fix an RStudio issue when calling dev.new()
+2. Changes
+   * Complete the citation information for the JSS paper
+   
+Thu Aug 04 2016
+1. Bug fixing
+   * Fix error when attempting to drop unused factors from level ID that isn't of factor type by using droplevels on the data frame instead of individual variables
+
+Mon Jul 25 2016
+1. Bug fixing
+   * Correctly use the new data passed into "newdata" parameter of predict function
+
+Mon Jul 18 2016
+1. Bug fixing
+   * Correctly check whether the model is cross-classified when calculating the model hierarchy
+   * Drop unused factors when calculating the complete-case group information
+
+Tue May 24 2016
+1. Bug fixing
+   * Fix incorrect common coefficients with categorical variables
+
+Mon May 23 2016
+1. Bug fixing
+   * Correct the parameter ordering to match that in the formula
+
+2. Changes
+   * Add initial support for model comparison tables via the memisc package
+   * Model fit objects now contain contrast information for factor variables in the model
+
+Wed Apr 27 2016
+1. Changes
+   * Avoid message from texreg when the R2MLwiN package is loaded
+   * Update model comparisons in demos to use the texreg package
+
+Tue Apr 26 2016
+1. Changes
+   * Add initial support for model comparison tables via the texreg package
+
+Thu Apr 21 2016
+1. Changes
+   * Allow variables that contain a "." character to work with formulae
+
+Mon Apr 11 2016
+1. Changes
+   * Use "get" function for clearing "foreach" package globals and updating the formula to satisfy CRAN checks
+
+Wed Feb 03 2016
+1. Changes
+   * If a denominator is not specified generate a column of ones and use that instead
+
+Tue Jan 05 2015
+1. Changes
+   * Run multiple MCMC seed example as parallel chains
+
+Thu Dec 17 2015
+1. Changes
+   * Add group size summary information for non-missing data to the hierarchy slot
+
+Wed Dec 16 2015
+1. Changes
+   * Return imputed datasets as a list of dataframes (in the imputations slot). This matches the input required by the mitools package.
+
+Tue Dec 15 2015
+1. Bug fixing
+   * Ignore missing values when checking that responses have valid values
+
+Fri Dec 04 2015
+1. Changes
+   * Add option to turn on simple notation when in debug mode
+
+Thu Dec 03 2015
+1. Changes
+   * Turn off reserved column overwrite warning in generated macro
+
+Fri Nov 27 2015
+1. Changes
+   * Allow specification of default gamma prior parameters
+
+Thu Nov 12 2015
+1. Bug fixing
+   * Corrected the prior covariance matrix in the MCMCGuide06 demo
+
+Fri Oct 16 2015
+1. Bug fixing
+   * Prevent MCMC refresh being higher than the total number of iterations
+
+Fri Oct 09 2015
+1. Bug fixing
+   * Add missing data type check
+   * Only run droplevels() where empty levels exist, also provide a warning when this happens
+
+Tue Oct 05 2015
+1. Changes
+   * Check data for Binomial, Poisson and Negative-binomial responses to ensure it is appropriate
+
+Thu Oct 01 2015
+1. Bug fixing
+   * Provide option to drop unused factor levels when processing the data (TRUE by default)
+   * Hard code one residual variable at level-1 for MCMC models
+
+Mon Sep 28 2015
+1. Bug fixing
+   * Fixed specifying an interaction as a common variable in ordered multinomial models
+
+Thu Sep 10 2015
+1. Bug fixing
+   * Fixed running ordered multinomial models in MCMC where starting values are provided
+
+Tue Sep 08 2015
+1. Changes
+   * Add S3 wrappers to allow functions such as linearHypothesis to work again
+
+Thu Aug 20 2015
+1. Bug fixing
+   * Fixed a bug preventing the behaviour of ignoring the intercept term when modifying the output object from the runMLwiN call using updateMLwiN
+
+Thu Aug 6 2015
+1. Bug fixing
+   * In matrix2df, handle rows where all values are zero
+
+Thu Jul 23 2015
+1. Changes
+   * Add an option to allow saving the MLwiN worksheet to a file after the model is run
+
+Tue May 19 2015
+1. Bug fixing
+   * Correct table creation at beginning of MCMCGuide09 that was wrong due to a change in variable name
+   * Fixed a bug preventing Negative-binomial models from running
+2. Changes
+   * Add support for Negative-binomial in MCMC (requires MLwiN version 2.33 or higher)
+
+Fri May 15 2015
+1. Changes
+   * Add support for multiple MCMC chains with MLwiN
+
+Tue Apr 21 2015
+1. Bug fixing
+   * Mixed Poisson/normal models no longer need to have the Poisson response first when using offsets
+
+Fri Apr 17 2015
+1. Bug fixing
+   * Reinstate starting residuals for non-cross-classifed models
+
+Thu Apr 16 2015
+1. Bug fixing
+   * Correct naming of residual parameter chains
+
+Fri Apr 1 2015
+1. Bug fixing
+   * Allow trajectories function to work with a simple unlabelled vector
+
+Tue Mar 10 2015
+1. Bug fixing
+   * Display the correct number of observations in the output for mixed response models
+   * Fixed a bug when specifying an interaction term as a common variable
+   * Correct cases with multivariate/multinomial models where the MLwiN level numbering was being used in options, instead of matching the command
+
+Thu Mar 5 2015
+1. Bug fixing
+   * Fixed the transfer to MLwiN of starting values for the fixed part covariance matrix when using MCMC estmation
+   * Fixed reference category check for ordered multinomial models when the response variable has string labels
+
+2. Changes
+   * Update default OpenBUGS location in demos
+
+Fri Feb 27 2015
+1. Bug fixing
+   * Give error message is logLik or deviance are requested for non-normal models
+   * Correct prediction calculation to take denominator/offset into account
+   * Correct the preduction calculation when "terms" option is specified
+   * Fixed a bug when specifying common variables in mixed response models
+   * Allow interactions in the random part when using the newer syntax
+
+2. Changes
+   * Modified MCMCGuide08 demo to run simulations in parallel using the doParallel package
+   * Modified MCMCGuide11 demo to run last model for full number of iterations
+   * Removed df.residual method for MCMC models
+   * Switched the position of the level identifier and predictor variables in the model formula
+
+Wed Jan 31 2015
+1. Bug fixing
+   * Allow matrix2df to work with unnamed columns
+   * Correctly handle "1" within the clre parameter
+   * Correct calculations related to standardised residuals
+   * Correct function default values
+   * Check residuals were stored when calling PredCurves/PredLines
+   * Correct applying fixed part starting values
+   * Save starting values in the order expected by MLwiN
+   * Correct handling of common coefficients for categorical variables
+   * Correct handling categorical predictors that contain missing values
+   * No longer automatically print out chain summaries when using BUGS options
+   * Prevent categ and centring options being used when using new formula syntax
+   * Check variable names are not duplicated if case is ignored
+   * Allow handling of much longer variable names that was previously possible
+
+2. Changes
+   * Add "standardise" option to matrix2df to ensure weights sum to zero
+   * Issue warning if a factor variable is used as a continuous response
+   * Allow multiple membership/CAR information to be specified using matrices
+   * Report the quasi-likelihood method used for non-normal models in summary
+   * Report the MLwiN version used in summary
+   * Removed some unused code
+   * Allow mlwinfitIGLS and mlwinfitMCMC objects to be passed directly to caterpillarR
+   * Add check to predCurves to ensure object passed is an mlwinfitIGLS or mlwinfitMCMC object
+   * Return residuals as a list of vectors
+   * Detect 32/64 bit version of MLwiN in ws2foreign
+   * Change trajectories function to work on mcmc, mcmc.list and mlwinfitMCMC objects
+   * Coverted documenation to be generated via roxygen2
+   * Update demos to reflect recent changes
+   * Prompt the user to exit after a model run is finished under debug mode
+   * Updated default MLwiN version to 2.32
+   * Updated package version to 0.8-0
+
+Thu Oct 24 2014
+1. Bug fixing
+   * Use package name when loading data to avoid clashing with other packages
+   * Load missing packages installing them in the demos
+
+2. Changes
+   * Added df2matrix and matrix2df functions to convert multiple membership information between data frame and matrix formats
+
+Mon Oct 20 2014
+1. Bug fixing
+   * Updated package information to specify the correct dependencies and external functions.
+   * Corrected generated macro for  (R)IGLS weights so that standardised weight columns at different levels do not overwrited each other
+   * Keep missing data when generating new variables
+
+2. Changes
+   * Implemented new formula syntax (see help files) to fit better with R conventions
+   * Optionally use the sparseby function to reduce memory usage when calculating model hierarchy information
+   * Added missing S4 methods to allow operation with more external packages
+   * Added analysed data to the S4 object to allow postestimation analysis
+   * All interaction/dummy variables are now generated prior to calling MLwiN when using the newer syntax
+   * Implemented new syntax for specifying cross-classified/multiple membership/CAR models
+   * Updated included demos to use the newer formula syntax
+   * Added CITATION file into package
+
+Tue Jul 15 2014
+1. Changes
+   * Replace 0s, 0c,... by 0|, 0||,..., respectively.
+   * Be able to specify the level name (e.g. school|cons + standlrt) instead of just the level number (e.g. 2|cons + standlrt)
+   * Omit 0| for all the cases except for that both 0| and 0|| exists in the formula.
+   * Allow attached data to be picked up when running a model
+   * Automatically convert logical/factor variables used as the response for Binomial models
+   * Cross-classified notation is now used in the equation by default for cross-classified models
+
+Mon Jun 30 2014
+1. Bug fixing
+   * Return full covariance matrices in FP.cov and RP.cov
+   * Fix level numbers in residual names for Multivariate/Multinomial models
+   * Allow single-level binomial/Poisson/negative binomial models to be fitted
+   * Fix output when Std. Err. is zero (for example if a parameter is collinear)
+   * Fix reported number of observations and observations in use
+   * If RIGLS is specified as the estimation method correctly reflect this in the model output
+   * Don't calculate starting residuals for cross-classified models
+   * BUGS output should now make use of prior specification for non-cross-classified models
+   * Added check that a denominator has been specified for Binomial models
+   * Added check that no variables are made random at level-one in discrete response models
+   * Added check that response variables for multinomial models have at least two categories
+   * Added check that the reference category is valid for multinomial models
+   * Added check that the levels for hierarchical centring and parameter expansion are valid
+   * Added check that nonlinear options are valid
+   * Added check for the response type and link function in Mixed response models
+   * Added check that the specified distribution is valid
+   * Fixed macro generation for Poisson responses in mixed models
+   * smat option can now apply to more than one level
+   * Added check that the IDs and weights are valid for multiple membership models
+   * Removed redundant estIGLS/estMCMC outputs
+   * Make offset optional for Poisson/Negative binomial models
+   * Display error message if invalid link function is specified
+
+2. Changes
+   * Enabled matching starting values on parameter names (allowing subsets of parameters to be specified)
+   * Enabled use of the coef, vcov and logLik functions
+   * Added stubs for predict, residuals, df.residual and fitted
+   * Added further example data
+   * Added examples to replicate the MLwiN User's guide
+   * Added option to control the maximum number of iterations for (R)IGLS
+   * Added option to control the (R)IGLS convergence tolerance
+   * (R)IGLS convergence is now reported in the output
+   * Added Log-likelihood to the output for (R)IGLS models
+   * prior2macro will automatically be called from runMLwiN if priorParam is specified as a list
+   * Added hierarchy information to the model output
+   * Allow non-factor variables as the response for multinomial models
+
+Fri Jun 20 2014
+1. Bug fixing
+   * Added check that CAR is only requested at one level, unless CAR mean centring is turned on
+
+2. Changes
+   * Added option to turn on CAR mean centring
+
+Mon Jun 9 2014
+1. Changes
+   * 1 can now be used in the model formula to specify an intercept term
+   * If debugmode is turned on MLwiN will pause before and after fitting the model
+   * Added extra estimation option to allow extra binomial/poisson/negative binomial/multinomial variables in (R)IGLS
+   * Added reset estimation option to control negative variances in (R)IGLS models
+   * Added constraints option for fixed and random part in (R)IGLS models
+   * Allow more data variables by finding empty columns for output rather than hardcoding column numbers
+
+Fri Jun 6 2014
+1. Bug fixing
+   * Don't bother running the model with (R)IGLS first if initial values have been specified by the user
+   * Ensure that EstM is set to one when the BUGO option is specified in the demos
+   * Allow initial values to be specified for (R)IGLS estimateion
+
+2. Changes
+   * Check EstM option is set to zero or one
+   * Check response type and link functions are valid
+   * Check that the selected residual options are valid for the current estimation method
+   * Only allow weighting to be specified if the model is univariate and is esimated with (R)IGLS
+   * Don't allow clre and smat options to be specified at the same time as they current clash
+   * Only allow factor models to be specified if the model is multivariate and estimated with MCMC
+   * Disallow cross-classification options if the model is estimated with (R)IGLS
+   * Disallow measurement error options if the model is estimated with (R)IGLS
+   * Disallow MCMC options and estimation settings if the model is estimated with (R)IGLS
+   * Disallow setting BUGO options if the models is set to be estimated with (R)IGLS
+   * Check that binomial response variables lie between zero and one inclusive
+   * Check that Poisson response variables are positive integers
+   * startval moved from MCMC to general options
+   * Allow data keyword to be used as an alternative to indata
+   * Untoggle no longer sometimes produces numeric column names
+
+Tue Jun 3 2014
+1. Bug fixing
+   * Check the input data are sorted according to the model hierarchy and provide error if not
+   * Only send the data used in the model to MLwiN
+   * Interpret xclass by option names instead of positions
+   * Updated demos to fix cases where that data is not sorted as expected
+
+2. Changes
+   * Add sort.force option to make R2MLwiN sort the data as expected
+   * Add sort.ignore option to disable checking of sort order
+   * Add drop.data option to send the whole data file to MLwiN
+
+Mon May 12 2014
+1. Bug fixing
+   * Allow R formula object to be used when fitting factor models
+   * Set default value for indata to NULL and give error message if it isn't specified
+   * Call MLwiN via system2 instead of shell to improve cross-platform compatibility
+   * Fixed error in caterpillarR
+   * Use dev.new() instead of windows() function to allow graphs to be displayed on non-Windows systems
+2. Changes
+   * Set Y-axis for ACF/PACF graphs to range from zero to one
+   * Use column name for parameter if it isn't manually specified in sixway
+   * Allow full path to the MLwiN executable to be specified instead of just the root path
+   * Allow redirection of output from MLwiN when it is called
+   * Detect the version of MLwiN being used and block if it is too old
+   * Allow package to be installed on non-Windows systems
+   * Add MLwiN_path option to allow the location of MLwiN to be set once per session
+   * Factor chains are now reshaped to one column per parameter when returned
+   * Residual chains are now reshapred to one column per paramter when returned
+   * Updated demonstration code to use formula objects instead of strings
+   * Updated demonstration code to call OpenBUGS instead of WinBUGS to allow them to be run cross-platform
+   * Removed respecification of default options in demonstration code to make it more readable
+   * ECHO MLwiN output to the console while model fitting
+   * Automatically select 32/64-bit version of MLwiN based on running version of R
+   * Sample data used by the examples is now included within the package
+
+Tue Apr 22 2014
+1. Bug fixing
+   * Missing values are erroneously marked as 'infinite' when re-fitting non-Normal models in debugmode, thus resulting in errors
+
+Fri Mar 28 2014
+1. Bug fixing
+   * Fixed display when interaction terms involve
+   * Fixed display when >1 non-Normal response
+   * Correctly handle bcons parameters
+
+Thu Mar 7 2014
+1. Bug fixing
+   * Fixed residuals for multivariate response models
+   * Appropriate MCMC residuals now returned
+   * Fixed bug: now allows for >2 responses in multivariate response model
+   * Fixed CaterpillarR function
+2. Changes
+   * Removed option to specify resioptions = c("sampling") for MCMC estimation
+
+Wed Feb 26 2014
+1. Changes
+   * Added 'optimat' option
+
+Fri Jan 24 2014
+1. Bug fixing
+   * Fixed bug in Untoggle which was mis-assigning names to categories
+2. Changes
+   * Tested the package running on MLwiN v2.29; now changed default MLwiNPath
+
+Thu Nov 21 2013
+1. Bug fixing
+   * sixway now allows user to specify some graphic parameters (see par()); This fixes errors, e.g., "figure margins too large".
+   * Corrected error when workdir path contains spaces in ws2foreign.r.
+   * fixed a bug in Formula.translate. The backward compatibility was not working; this has been removed since we support R 2.14.0 onwards.
+   * Write.dta now saves as version=10 to circumvent problem of MLwiN mishandling missing values in .dta files saved under earlier versions of Stata. (Although this will be addressed in future release of MLwiN.)
+
+2. Changes
+   * Added an option to use R formula objects (i.e., without quotes around the character formula). NOTE that if an R formula is used, 0c, 0s,..., have to be changed to `0c`, `0s`,.... Any curly bracket, {}, has to be changed to a round bracket, ().
+   * Added an update method for mlwinfitIGLS and mlwinfitMCMC class objects.
+   * Added some example datasets and their related help files.
+   * predLines(i.e., predLines1 & predLines2) and predCurves(i.e., predLines3) now depend on lattice package.
+
+Fri Sep 06 2013
+1. Bug fixing
+   * When a model is run using MCMC, iterations (as set by the user in mcmcMeth) now refers to total chain run (post-burnin), rather than stored iterations only (relevant when thinning >1).
+   * An MLwiN MCMC run no longer redundantly occurs when use BUGO with EstM=1 (e.g. when setting mcmcOptions).
+   * Changed assignment of BUGO arguments from being solely determined by the order in which they're written, to instead determined by keywords.
+   * MCSE algorithm now handles thinning appropriately.
+   * sixway now handles thinning appropriately, and also swapped trace plot axis labels so that now correctly-labelled.
+   * Corrected the summary and print functions to operate as expected.
+   * Corrected error in number of observations returned in model summary: now corresponds to non-missing observations (with total in parentheses).
+   * 'Conf' interval now referred to as 'Cred' interval in MLwiN MCMC output.
+   * Corrected error when workdir path contains spaces.
+   * Corrected generation of missing indicator in imputation data.
+
+2. Changes
+   * BUGO (used to call WinBUGS / OpenBUGS) now supports >1 chain.
+   * Added debug and seed options to BUGO.
+   * Removed redundant creation of combined BUGS files (bugofile; all BUGS files still returned separately).
+   * Calling BUGS now returns summary of mcmc.list instead of MLwiN IGLS output (chains.bugs no longer returned).
+   * All chains returned from an MCMC run in MLwiN are now mcmc objects.
+   * Added option to display Bayesian one-sided p-value instead of z-ratio and its associated p-value in MCMC output from MLwiN (the default is z.ratio = TRUE).
+   * Global options 'digits' and 'show.signif.stars' now enabled, allowing users to specify the number of digits to display in the summary model output, as well as whether to display the stars which signify p-value thresholds, or not.
+   * MCSE now handles mcmc objects, and handles thinning appropriately.
+   * sixway now takes an mcmc object.
+   * In sixway, Raftery-Lewis now returns error message when chain's too short for it to be calculated.
+   * Changed default version MLwiN to 2.27.
+   * Updated demos and help files.
+
+Tue Feb 12 2013
+1. Bugs fixing
+   * For cross-classified models, only the residuals and their SE are returned from MCMC fitting.
+2. Testing on MLwiN 2.27.
+
+Mon Feb 04 2013
+1. Bugs fixing
+   * an issue on dropping a covariance from a model
+
+Tue Jan 15 2013
+1. Bugs fixing by Thomas Arkens
+   * add multiple categorical variables in the fixed terms.
+   * fix the reference categories (by changing to the level number of the factor object in R.)
+2. Changes
+   * in sixway(), replace getOption("device")() by windows(), so the package works in Rstudio.
+
+Thu Nov 15 2012
+1. New features
+   * add various options for calculating residuals at all levels.
+
+Thu Oct 18 2012
+1. New features
+   * add functionality to centre the explanatory variables.
+
+Tue Oct 09 2012
+1. Changes
+   * the output of a fitted model is now a S4 class object consisting of print, "[", "[<-" and summary methods.
+   * drop "$" to get an element of the output object.
+
+2. New features
+   * add macros to do weighting on all the levels when using IGLS.

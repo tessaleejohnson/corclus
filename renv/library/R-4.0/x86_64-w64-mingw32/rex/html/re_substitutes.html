@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Substitute regular expressions in a string with another...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for re_substitutes {rex}"><tr><td>re_substitutes {rex}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Substitute regular expressions in a string with another string.</h2>
+
+<h3>Description</h3>
+
+<p>Substitute regular expressions in a string with another string.
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+re_substitutes(data, pattern, replacement, global = FALSE, options = NULL, ...)
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>data</code></td>
+<td>
+<p>character vector to substitute</p>
+</td></tr>
+<tr valign="top"><td><code>pattern</code></td>
+<td>
+<p>regular expression to match</p>
+</td></tr>
+<tr valign="top"><td><code>replacement</code></td>
+<td>
+<p>replacement text to use</p>
+</td></tr>
+<tr valign="top"><td><code>global</code></td>
+<td>
+<p>substitute all occurrences</p>
+</td></tr>
+<tr valign="top"><td><code>options</code></td>
+<td>
+<p>option flags</p>
+</td></tr>
+<tr valign="top"><td><code>...</code></td>
+<td>
+<p>options passed to sub or gsub</p>
+</td></tr>
+</table>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="../../base/html/regex.html">regexp</a></code> Section &quot;Perl-like Regular Expressions&quot; for a
+discussion of the supported options
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+string &lt;- c("this is a Test", "string")
+re_substitutes(string, "test", "not a test", options = "insensitive")
+re_substitutes(string, "i", "x", global = TRUE)
+re_substitutes(string, "(test)", "not a \\1", options = "insensitive")
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rex</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

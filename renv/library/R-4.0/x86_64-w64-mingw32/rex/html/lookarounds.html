@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml"><head><title>R: Lookarounds</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" type="text/css" href="R.css" />
+</head><body>
+
+<table width="100%" summary="page for lookarounds {rex}"><tr><td>lookarounds {rex}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Lookarounds</h2>
+
+<h3>Description</h3>
+
+<p>Lookarounds
+</p>
+
+
+<h3>Usage</h3>
+
+<pre>
+x %if_next_is% y
+
+x %if_next_isnt% y
+
+x %if_prev_is% y
+
+x %if_prev_isnt% y
+</pre>
+
+
+<h3>Arguments</h3>
+
+<table summary="R argblock">
+<tr valign="top"><td><code>x</code></td>
+<td>
+<p>A regex pattern.</p>
+</td></tr>
+<tr valign="top"><td><code>y</code></td>
+<td>
+<p>A regex pattern.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>These functions provide an interface to perl lookarounds.
+</p>
+<p>Special binary functions are used to infer an ordering, since often you
+might wish to match a word / set of characters conditional on the start
+and end of that word.
+</p>
+
+<ul>
+<li> <p><code>%if_next_is%</code>: <code>TRUE</code> if x follows y
+</p>
+</li>
+<li> <p><code>%if_next_isnt%</code>: <code>TRUE</code> if x does not follow y
+</p>
+</li>
+<li> <p><code>%if_prev_is%</code>: <code>TRUE</code> if y comes before x
+</p>
+</li>
+<li> <p><code>%if_prev_isnt%</code>: <code>TRUE</code> if y does not come before x
+</p>
+</li></ul>
+
+
+
+<h3>See Also</h3>
+
+<p>Perl 5 Documentation <a href="http://perldoc.perl.org/perlre.html#Extended-Patterns">http://perldoc.perl.org/perlre.html#Extended-Patterns</a>
+</p>
+<p>Other rex: 
+<code><a href="or.html">%or%</a>()</code>,
+<code><a href="capture.html">capture</a>()</code>,
+<code><a href="character_class.html">character_class</a>()</code>,
+<code><a href="counts.html">counts</a></code>,
+<code><a href="group.html">group</a>()</code>,
+<code><a href="not.html">not</a>()</code>,
+<code><a href="rex.html">rex</a>()</code>,
+<code><a href="shortcuts.html">shortcuts</a></code>,
+<code><a href="wildcards.html">wildcards</a></code>
+</p>
+
+
+<h3>Examples</h3>
+
+<pre>
+stopifnot(grepl(rex("crab" %if_next_is% "apple"), "crabapple", perl = TRUE))
+stopifnot(grepl(rex("crab" %if_prev_is% "apple"), "applecrab", perl = TRUE))
+stopifnot(grepl(rex(range("a", "e") %if_next_isnt% range("f", "g")),
+  "ah", perl = TRUE))
+stopifnot(grepl(rex(range("a", "e") %if_next_is% range("f", "i")),
+  "ah", perl = TRUE))
+</pre>
+
+<hr /><div style="text-align: center;">[Package <em>rex</em> version 1.2.0 <a href="00Index.html">Index</a>]</div>
+</body></html>

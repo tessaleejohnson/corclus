@@ -1,0 +1,190 @@
+BD                      Calculates Brooks-Draper diagnostic
+Formula.translate       An internal function to translate an R formula
+                        into an R list object.
+Formula.translate.compat
+                        An internal function, allowing
+                        back-compatibility, which translates a model
+                        formula from a formula object or character
+                        string into an R list object.
+MCSE                    Calculates the estimated Monte Carlo standard
+                        error (MCSE)
+R2MLwiN                 Running MLwiN from within R
+Untoggle                Converts a categorical variable into several
+                        separate binary variables
+[,mlwinfitIGLS,ANY,ANY,ANY-method
+                        Extract or Replace parts of "mlwinfitIGLS"
+                        objects
+[,mlwinfitMCMC,ANY,ANY,ANY-method
+                        Extract or Replace parts of "mlwinfitMCMC"
+                        objects
+alevchem                Chemistry A-level results from one exam board
+augment.mlwinfitIGLS    Augment data frame with information derived
+                        from the model fit (broom package).
+augment.mlwinfitMCMC    Augment data frame with information derived
+                        from the model fit (broom package).
+bang                    Sub-sample from the 1989 Bangladesh Fertility
+                        Survey (see Huq & Cleveland, 1990)
+bang1                   Sub-sample from the 1989 Bangladesh Fertility
+                        Survey
+bes83                   Subsample from British Election Study, '83.
+caterpillar             Draws a caterpillar plot (in MLwiN style).
+caterpillarR            Draws caterpillar plots of the residuals from a
+                        mlwinfitIGLS-class or mlwinfitMCMC-class
+                        object, at a chosen level of the multilevel
+                        model.
+coef,mlwinfitIGLS-method
+                        Extract the coefficient vector from
+                        "mlwinfitIGLS" objects
+coef,mlwinfitMCMC-method
+                        Extract the coefficient vector from
+                        "mlwinfitMCMC" objects
+coef.mlwinfitIGLS       Extract the coefficient vector from
+                        "mlwinfitIGLS" objects
+coef.mlwinfitMCMC       Extract the coefficient vector from
+                        "mlwinfitMCMC" objects
+deviance.mlwinfitIGLS   Returns the deviance from "mlwinfitIGLS"
+                        objects.
+df.residual.mlwinfitIGLS
+                        Returns the residual degrees-of-freedom
+                        extracted from "mlwinfitIGLS" objects.
+df2matrix               Translates a data.frame, formatted for use in
+                        multiple membership modelling in MLwiN, to a
+                        matrix.
+diag1                   Examination dataset
+double2singlePrecision
+                        Converts numerical values from double precision
+                        to single precision.
+extract,mlwinfitIGLS-method
+                        Extract coefficients and GOF measures from a
+                        statistical object (texreg package).
+extract,mlwinfitMCMC-method
+                        Extract coefficients and GOF measures from a
+                        statistical object.
+fitted.mlwinfitIGLS     Returns the fitted values from "mlwinfitIGLS"
+                        objects.
+fitted.mlwinfitMCMC     Returns the fitted values from "mlwinfitMCMC"
+                        objects.
+formula.mlwinfitIGLS    "mlwinfitIGLS" model formula
+formula.mlwinfitMCMC    "mlwinfitMCMC" model formula
+gcsecomp1               Pupils' marks from GCSE exams (UK, 1989);
+                        complete cases only.
+gcsemv1                 Pupils' marks from GCSE exams (UK, 1989).
+getSummary.mlwinfitIGLS
+                        Extract coefficients and GOF measures from a
+                        statistical object (memisc package).
+getSummary.mlwinfitMCMC
+                        Extract coefficients and GOF measures from a
+                        statistical object (memisc package).
+glance.mlwinfitIGLS     Extract GOF measures from a statistical object
+                        (broom package).
+glance.mlwinfitMCMC     Extract GOF measures from a statistical object
+                        (broom package).
+height                  Height data.
+hungary1                Hungarian component of 2nd International
+                        Science Survey, '84; see Goldstein 2003
+jspmix1                 Dataset of pupils' test scores, a subset of the
+                        Junior School Project.
+lips1                   Lips data
+logLik,mlwinfitIGLS-method
+                        Returns the log-likelihood from "mlwinfitIGLS"
+                        objects.
+matrix2df               For multiple membership models, translates
+                        matrix into a data.frame formatted for MLwiN
+                        Translates a 'matrix' into a form usable by
+                        MLwiN for multiple membership models, namely a
+                        'data.frame' with (a) columns containing
+                        membership IDs (if first row matrix is '0 1 1 0
+                        1 1', then first row of generated ID vectors
+                        would be, say, '2, 3, 5, 6') and (b) columns
+                        containing weights (in this example, if
+                        'standardise = TRUE', then first row of
+                        generated weight vectors would be, say, '0.25,
+                        0.25, 0.25, 0.25', otherwise first row of
+                        generated weight vectors would be, say, '1, 1,
+                        1, 1').
+mlwin2bugs              This function captures output files from MLwiN
+                        for estimation in WinBUGS/OpenBUGS.
+mlwinfitIGLS-class      An S4 class that stores the outputs of the
+                        fitted IGLS model.
+mlwinfitMCMC-class      An S4 class that stores the outputs of the
+                        fitted MCMC model.
+mmmec                   EC data on UV radiation exposure & malignant
+                        melanoma.
+nobs.mlwinfitIGLS       Returns the number of used observations from
+                        "mlwinfitIGLS" objects.
+nobs.mlwinfitMCMC       Returns the number of used observations from
+                        "mlwinfitMCMC" objects.
+predCurves              Draws predicted curves (lines) using estimates
+                        from the fixed part of a fitted model.
+predLines               Draws predicted lines using a fitted model
+                        object
+predict.mlwinfitIGLS    Returns the predicted data from "mlwinfitIGLS"
+                        objects.
+predict.mlwinfitMCMC    Returns the predicted data from "mlwinfitMCMC"
+                        objects.
+print.mlwinfitIGLS      Summarize "mlwinfitIGLS" objects
+print.mlwinfitMCMC      Summarize "mlwinfitMCMC" objects
+prior2macro             Translates informative prior information into a
+                        concise MLwiN macro.
+rats                    Weights of 30 rats, measured weekly over 5
+                        weeks.
+reading1                Students' reading attainment in inner London
+                        infant schools.
+residuals.mlwinfitIGLS
+                        Returns the residual data from "mlwinfitIGLS"
+                        objects.
+residuals.mlwinfitMCMC
+                        Returns the residual data from "mlwinfitMCMC"
+                        objects.
+runMLwiN                Calls MLwiN from R.
+show,mlwinfitIGLS-method
+                        Show objects of class "mlwinfitIGLS"
+show,mlwinfitMCMC-method
+                        Show objects of class "mlwinfitMCMC"
+show.mlwinfitIGLS       Summarize "mlwinfitIGLS" objects
+show.mlwinfitMCMC       Summarize "mlwinfitMCMC" objects
+sixway                  Draws a sixway plot of MCMC diagnostics.
+summary,mlwinfitIGLS-method
+                        Summarize "mlwinfitIGLS" objects
+summary,mlwinfitMCMC-method
+                        Summarize "mlwinfitMCMC" objects
+summary.mlwinfitIGLS    Summarize "mlwinfitIGLS" objects
+summary.mlwinfitMCMC    Summarize "mlwinfitMCMC" objects
+tidy.mlwinfitIGLS       Summarises information about the components of
+                        a model from a statistical object (broom
+                        package).
+tidy.mlwinfitMCMC       Summarises information about the components of
+                        a model from a statistical object (broom
+                        package).
+trajectories            Plots MCMC chain trajectories
+tutorial                Exam results for six inner London Education
+                        Authorities
+update,mlwinfitIGLS-method
+                        Update "mlwinfitIGLS" objects
+update,mlwinfitMCMC-method
+                        Update "mlwinfitMCMC" objects
+update.mlwinfitIGLS     Update "mlwinfitIGLS" objects
+update.mlwinfitMCMC     Update "mlwinfitMCMC" objects
+vcov,mlwinfitIGLS-method
+                        Extract the approximate variance-covariance
+                        matrix from "mlwinfitIGLS" objects
+vcov,mlwinfitMCMC-method
+                        Extract the approximate variance-covariance
+                        matrix from "mlwinfitMCMC" objects
+vcov.mlwinfitIGLS       Extract the approximate variance-covariance
+                        matrix from "mlwinfitIGLS" objects
+vcov.mlwinfitMCMC       Extract the approximate variance-covariance
+                        matrix from "mlwinfitMCMC" objects
+wage1                   Simulated dataset of office workers' salary and
+                        other employment details.
+write.IGLS              Writes MLwiN macros to fit models using the
+                        iterative generalized least squares (IGLS)
+                        algorithm.
+write.MCMC              Writes MLwiN macros to fit models using Markov
+                        chain Monte Carlo (MCMC) methods
+ws2foreign              Converts data from one format to another within
+                        MLwiN
+xc                      Examination scores of 16-year olds in Fife,
+                        Scotland.
+xc1                     Examination scores of 16-year olds in Fife,
+                        Scotland.
