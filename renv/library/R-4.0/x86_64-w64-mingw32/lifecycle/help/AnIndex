@@ -10,7 +10,7 @@ is_present	deprecated
 last_warning	last_warnings
 last_warnings	last_warnings
 lifecycle	lifecycle-package
-lifecycle_cnd_data	signal_experimental
 signal_experimental	signal_experimental
+signal_stage	signal_stage
 signal_superseded	signal_experimental
 verbosity	verbosity
