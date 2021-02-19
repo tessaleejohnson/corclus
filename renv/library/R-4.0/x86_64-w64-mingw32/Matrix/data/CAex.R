@@ -1,4 +1,5 @@
-stopifnot(requireNamespace("Matrix" , quietly = TRUE)) # includes 'methods'
+stopifnot(requireNamespace("methods", quietly = TRUE),
+	  requireNamespace("Matrix" , quietly = TRUE))
 
 CAex <-
     local({
