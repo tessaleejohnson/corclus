@@ -12,7 +12,8 @@ run_mlwin(
   .mcmc_burn = 100,
   .mcmc_iter = 1000,
   .mcmc_nchains = 1,
-  .mm_list = NULL
+  .mm_list = NULL,
+  .progress_bar
 )
 }
 \arguments{

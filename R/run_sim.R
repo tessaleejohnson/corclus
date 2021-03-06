@@ -55,11 +55,17 @@ run_sim <-
     .sim_args = list_conditions_datagen(),
     .plan_future = plan_future(),
     .seed_start = TRUE,
+    .progress_bar = FALSE,
     ...
   ) {
 
     ##--force evaluation of the .sim_args--##
     force(.sim_args)
+
+    ##--start progress bar--##
+    if (.progress_bar) {
+      .p <- progressr::progressor(steps = max(lengths(.sim_args)))
+    }
 
     ##--set parallel processing plan--##
 
@@ -75,13 +81,14 @@ run_sim <-
       furrr::future_pmap(
         .l = .,
         .f = .sim_fun,
+        .progress_bar = .p,
         .options = furrr::furrr_options(
           seed = .seed_start
         )
       )
 
     ##--output a list of result and the simulation condition--##
-    list(result = result, condition = .sim_args)
+    list(result = result, condition_list = .sim_args)
 
   }
 

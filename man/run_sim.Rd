@@ -9,6 +9,7 @@ run_sim(
   .sim_args = list_conditions_datagen(),
   .plan_future = plan_future(),
   .seed_start = TRUE,
+  .progress_bar = FALSE,
   ...
 )
 }
