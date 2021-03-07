@@ -1,5 +1,8 @@
 #---------------------------------
 # External Dependencies:
+# furrr
+# progressr
+# future
 #
 # Internal Dependencies:
 #
@@ -65,6 +68,8 @@ run_sim <-
     ##--start progress bar--##
     if (.progress_bar) {
       .p <- progressr::progressor(steps = max(lengths(.sim_args)))
+    } else {
+      .p <- NULL
     }
 
     ##--set parallel processing plan--##
@@ -82,13 +87,14 @@ run_sim <-
         .l = .,
         .f = .sim_fun,
         .progress_bar = .p,
+        ...,
         .options = furrr::furrr_options(
           seed = .seed_start
         )
       )
 
     ##--output a list of result and the simulation condition--##
-    list(result = result, condition_list = .sim_args)
+    list(result = result)
 
   }
 

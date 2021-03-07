@@ -13,7 +13,8 @@
 
 #' extract_estimates
 #'
-#' @param .mod A model object produced by \code{\link[R2MLwiN]{runMLwiN}}.
+#' @param .mod A model object produced by \code{\link[R2MLwiN]{runMLwiN}} and
+#' \code{\link{run_mlwin}}.
 #'
 #' @param .mcmc_nchains Numeric. The number of chains \code{.mod} used.
 #'
@@ -34,7 +35,7 @@ extract_estimates <-
   ) {
 
     ##--setup--##
-    .draws <- .mod@chains
+    .draws <- .mod$chains
 
     if (.mcmc_nchains > 1) {
       .draws <- Reduce(rbind, .draws)

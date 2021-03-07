@@ -18,6 +18,7 @@ generate_data(
   .gamma_z = 0,
   .gamma_x = c(10, sqrt(17)/2),
   .mm_format = c("compact", "wide"),
+  .progress_bar = NULL,
   ...
 )
 }
@@ -61,6 +62,26 @@ patterns are desired, the code will need to be updated.}
 
 \item{.gamma_x}{Numeric vector with length p (where p is the number of model
 coefficients, including the intercept).}
+
+\item{.mm_format}{String. Options are "compact" or "wide".
+Compact formats require two variables, one for the organization ID and
+one for the weights; the number of variables in each type is equal to
+the maximum number of organizational memberships for any individual in
+the dataset. The wide format requires only one variable type, which
+provides the weight for each person for each organization. MLwiN
+documentation provides conflicting information about which type is required
+by \code{\link[R2MLwiN]{runMLwiN}}. In the
+\href{https://www.bristol.ac.uk/media-library/sites/cmm/migrated/documents/13-stata-example.pdf}{Stata documentation}.
+it is said that both R and Stata require wide format. In the documentation
+for the \code{R2MLwiN} \href{https://www.jstatsoft.org/article/view/v072i10/v72i10.pdf}{package}
+multiple membership analysis is demonstrated with compact form. Here, we
+use compact form as provided in the \code{R2MLwiN} package publication in
+the Journal of Statistical Software.}
+
+\item{.progress_bar}{Internal argument passed from \code{\link{run_sim}}.
+If \code{.progress_bar = TRUE} in the external \code{\link{run_sim}}
+function, then a progress bar will be displayed while executing this code.
+The arguments in this internal function defaults to \code{NULL}.}
 
 \item{...}{Other parameters passed to \code{\link{assign_mobility}}.}
 }

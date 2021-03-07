@@ -7,7 +7,8 @@
 extract_estimates(.mod, .mcmc_nchains = 1)
 }
 \arguments{
-\item{.mod}{A model object produced by \code{\link[R2MLwiN]{runMLwiN}}.}
+\item{.mod}{A model object produced by \code{\link[R2MLwiN]{runMLwiN}} and
+\code{\link{run_mlwin}}.}
 
 \item{.mcmc_nchains}{Numeric. The number of chains \code{.mod} used.}
 }

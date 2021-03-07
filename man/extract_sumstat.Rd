@@ -7,7 +7,8 @@
 extract_sumstat(.mod)
 }
 \arguments{
-\item{.mod}{A model object produced by \code{\link[R2MLwiN]{runMLwiN}}.}
+\item{.mod}{A model object produced by \code{\link[R2MLwiN]{runMLwiN}} and
+\code{\link{run_mlwin}}.}
 }
 \value{
 This function returns a single-column dataframe with model fit
