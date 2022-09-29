@@ -129,8 +129,6 @@ generate_data <-
         .sch_exp = .,
         .n_sch = .n_sch,
         .wt_vec = .wt_vec,
-        .wt_nonmob = FALSE,
-        .id_nonmob = FALSE,
         .pct_mobile = .pct_mobile,
         ...
       )

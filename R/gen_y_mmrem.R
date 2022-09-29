@@ -120,6 +120,7 @@ gen_y_mmrem <-
 
     .per_res_vec <- .dat %>%
       dplyr::select(., !!.per_res) %>%
+      unlist(.) %>%
       as.vector(.)
 
     ##--pre-combine some elements

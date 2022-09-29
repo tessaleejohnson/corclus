@@ -58,8 +58,8 @@ dat <-
     .mean_r = 0,
     .var_r = 0,
     .gamma_z = 1,
-    .gamma_x = c(0, 0),
-    .seed_start = 1
+    .gamma_x = c(0, 0)#,
+    #.seed_start = 1
   )
 
 # with equal weights and 2 schools max, level-2 variance should be

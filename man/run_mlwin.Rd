@@ -7,8 +7,8 @@
 run_mlwin(
   .dat,
   .model_formula = as.formula("y ~ 1 + (1 | sch_id_1) + (1 | stu_id)"),
-  .outcome_dist = c("Normal", "Binomial", "Poisson", "Negbinom",
-    "Unordered Multinomial", "Ordered Multinomial", "Multivariate Normal", "Mixed"),
+  .outcome_dist = c("Normal", "Binomial", "Poisson", "Negbinom", "Unordered Multinomial",
+    "Ordered Multinomial", "Multivariate Normal", "Mixed"),
   .mcmc_burn = 100,
   .mcmc_iter = 1000,
   .mcmc_nchains = 1,

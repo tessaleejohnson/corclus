@@ -128,6 +128,8 @@ assign_mobility <-
         t(.) %>%
         as.data.frame(.)
 
+    } else {
+      wt_dat <- weight_assign
     }
 
     # return to the unexpanded form of .sch_exp (with no duplicate rows)

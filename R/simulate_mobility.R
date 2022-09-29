@@ -96,7 +96,7 @@ simulate_mobility <-
 
       # procedure advantages: allows students to attend schools outside of the
       # one up/one down method, not too slow (even with 250k draws to form the
-      # population distribution), centering makes sending schools to school -2
+      # population distribution), centering makes sending students to school -2
       # as easy as to school +2, allows a non-random proportion of mobile
       # students.
 
