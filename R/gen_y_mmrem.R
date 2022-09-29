@@ -141,6 +141,6 @@ gen_y_mmrem <-
 
     ##--output--##
 
-    y[[1]]
+    as.vector(y)
 
   }
