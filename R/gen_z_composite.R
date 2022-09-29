@@ -22,6 +22,7 @@
 #' z_composite value should be equal to the predictor z from their first
 #' school attended.
 #'
+#' @export
 #'
 #' @examples \dontrun{
 #'

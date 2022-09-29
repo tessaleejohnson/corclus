@@ -29,6 +29,7 @@
 #' Correlations between school residuals and school-level predictors, if
 #' desired, must be incorporated into the \code{.sch_resid} values.
 #'
+#' @export
 #'
 #' @examples \dontrun{
 #'

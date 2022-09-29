@@ -25,6 +25,8 @@
 #' @return Sets the parallel processing plan for resolving futures. See
 #' \code{\link[future]{plan}} for output.
 #'
+#' @export
+#'
 #' @examples \dontrun{
 #'
 #' plan_future("multisession", 3)

@@ -4,7 +4,7 @@
 \alias{simulate_mobility_TEST}
 \title{simulate_mobility_TEST}
 \usage{
-simulate_mobility_TEST(.n_sch)
+simulate_mobility_TEST(.n_sch, .n_stu)
 }
 \arguments{
 \item{.n_sch}{}

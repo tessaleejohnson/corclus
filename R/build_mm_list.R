@@ -24,6 +24,8 @@
 #'
 #' @return This function returns a list to be passed to \code{run_mlwin}.
 #'
+#' @export
+#'
 #' @examples \dontrun{
 #'
 #' }

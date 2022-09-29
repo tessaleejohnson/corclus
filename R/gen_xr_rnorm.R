@@ -18,6 +18,7 @@
 #' the person-level predictor, x, are both continuous and normally distributed,
 #' generated using the \code{\link[stats]{Normal}} function.
 #'
+#' @export
 #'
 #' @examples \dontrun{
 #'

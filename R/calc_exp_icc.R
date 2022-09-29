@@ -12,6 +12,7 @@
 #' @inheritParams corclus_params
 #'
 #' @return A numeric scalar.
+#'
 #' @export
 #'
 #' @examples \dontrun{
