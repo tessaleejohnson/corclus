@@ -80,7 +80,7 @@ assign_mobility <-
     names(.sch_exp) <- paste0(names(.sch_exp), "_1")
 
     # simulate mobility assignments for all rows in the data
-    mob_defauls <- list(draws = n_row, max_dist = 1)
+    mob_defaults <- list(draws = n_row, max_dist = 1)
     mob_assign <- simulate_mobility(.draws = n_row, ...)
 
     # create a weighting scheme for students:
@@ -101,7 +101,7 @@ assign_mobility <-
         matrix(.wt_vec, nrow = n_row, ncol = length(.wt_vec), byrow = TRUE)
       )
 
-    names(weight_assign) <- c("sch_wt_1", "sch_wt_2")
+    names(weight_assign) <- paste0("sch_wt_", 1:length(.wt_vec))
 
     # if .wt_nonmob = FALSE, replace weights for non-mobile students
     # with 1/0s

@@ -4,7 +4,13 @@
 \alias{gen_u_mmrem}
 \title{gen_u_mmrem}
 \usage{
-gen_u_mmrem(.n_sch, .u_resid_var, .clust_cov, .gamma_z)
+gen_u_mmrem(
+  .n_sch,
+  .u_resid_var,
+  .clust_cov,
+  .gamma_z,
+  .override_n_sch = FALSE
+)
 }
 \arguments{
 \item{.n_sch}{Numeric scalar. Gives the total number of schools in the
@@ -24,6 +30,14 @@ default to 0. The main diagonal is the variance explained by the predictor.}
 
 \item{.gamma_z}{Numeric scalar. The school-level effect of the
 \code{z_predictors} on the random intercept.}
+
+\item{.override_n_sch}{Logical. This function utilizes
+\code{\link[mvnfast]{rmvn}} to draw from a multivariate normal distribution
+of size \code{.n_sch x .n_sch}. In testing, values of \code{.n_sch > 3000}
+caused this function to break. It is possible that machines with more
+memory or faster CPUs would fare better with this step. Unless this parameter
+is set to \code{.override_n_sch = TRUE}, function will throw an error if
+\code{.n_sch > 3000}. Defaults to \code{.override_n_sch = FALSE}.}
 }
 \value{
 This function returns a dataframe with four elements: "sch_id",
@@ -53,7 +67,9 @@ NOTE: this function relies on the \code{\link[mvnfast]{rmvn}} and
 first two of which (especially \code{rmvn}) get quite clunky when matrix
 sizes are large. Make sure that \code{.n_sch} is given a reasonable value to
 avoid this. In testing, it seems that 5000 works slowly, 10000 is very slow,
-and any more than that brings things to a complete halt.
+and any more than that brings things to a complete halt. Unless
+\code{.override_n_sch = TRUE} (where \code{FALSE} is the default), function
+will throw an error if \code{.n_sch > 3000}.
 }
 \examples{
 \dontrun{

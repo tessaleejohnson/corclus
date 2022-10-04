@@ -88,7 +88,7 @@ simulate_mobility <-
       ##--option 1: center--##
 
       # select from a large, approximately normal binomial distribution
-      # with a roughtly 50/50 probability of success, center the distribution
+      # with a roughly 50/50 probability of success, center the distribution
       # around 0 (at the median), remove all non-mobile draws (i.e.,
       # throw out the 0s), sample uniformly from the centered distribution with
       # no 0s, and then, after mobility has been assigned, throw out a certain

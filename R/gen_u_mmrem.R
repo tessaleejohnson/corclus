@@ -26,7 +26,17 @@
 #' first two of which (especially \code{rmvn}) get quite clunky when matrix
 #' sizes are large. Make sure that \code{.n_sch} is given a reasonable value to
 #' avoid this. In testing, it seems that 5000 works slowly, 10000 is very slow,
-#' and any more than that brings things to a complete halt.
+#' and any more than that brings things to a complete halt. Unless
+#' \code{.override_n_sch = TRUE} (where \code{FALSE} is the default), function
+#' will throw an error if \code{.n_sch > 3000}.
+#'
+#' @param .override_n_sch Logical. This function utilizes
+#' \code{\link[mvnfast]{rmvn}} to draw from a multivariate normal distribution
+#' of size \code{.n_sch x .n_sch}. In testing, values of \code{.n_sch > 3000}
+#' caused this function to break. It is possible that machines with more
+#' memory or faster CPUs would fare better with this step. Unless this parameter
+#' is set to \code{.override_n_sch = TRUE}, function will throw an error if
+#' \code{.n_sch > 3000}. Defaults to \code{.override_n_sch = FALSE}.
 #'
 #' @inheritParams corclus_params
 #'
@@ -65,10 +75,23 @@ gen_u_mmrem <-
     .n_sch,
     .u_resid_var,
     .clust_cov,
-    .gamma_z
+    .gamma_z,
+    .override_n_sch = FALSE
   ) {
 
     ##--setup--##
+
+    # check if .n_sch is too big for generating multivariate normal values
+    # for the predictor (matrix size .n_sch x .n_sch): .n_sch > 3000 is
+    # causes function to break
+    # .override_n_sch == TRUE allows .n_sch to be any value
+    if (.n_sch > 3000 & !.override_n_sch) {
+      stop(glue::glue('
+          .n_sch must be less than or equal to 3000 to allow mvnfast::rmvn()
+          step to proceed. Override this error check by setting
+          .override_n_sch = TRUE.
+          '))
+    }
 
     # create an ID for the u0j school random intercept residual
     id <- seq_len(.n_sch)
@@ -90,7 +113,7 @@ gen_u_mmrem <-
     # residual variance in the random intercept after controlling for
     # predictor_z. if predictor_z has a population variance of 0.8
     # (i.e., .clust_cov = 0.8) and u_residual is equal to 0.2, then
-    # u_residual represents (.2/(0.2 + 0.8)), or 20% of
+    # u_residual represents (0.2/(0.2 + 0.8)), or 20% of
     # the school-level random intercept variance
     v_residual <- rnorm(
       n = .n_sch,
